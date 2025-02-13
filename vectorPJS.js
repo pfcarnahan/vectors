@@ -1,20 +1,31 @@
-/**
- * A 3D and 2D vector class with common vector operations
- */
-class Vec {
+var Vec = (function() {
+    //Version 1.1.0
+    
+    Object.constructor.prototype.new = (function() {
+        var obj = Object.create(this.prototype);
+        this.apply(obj, arguments);
+        return obj;
+    }); // 'new' leak patch. Calling '{CONSTRUCTOR NAME}.new({ARGUMENTS})' Will function the same as 'new {CONSTRUCTOR NAME}({ARGUMENTS})'
+
+
     /**
      * Create a new vector
+     * @constructor
      * @param {number} [x=0] - X component
      * @param {number} [y=0] - Y component
      * @param {number} [z=0] - Z component
+     * @returns {Vec} New Vec instance
      */
-    constructor(x = 0, y = 0, z = 0) {
-        this.x = Number(x)
-        this.y = Number(y)
-        this.z = Number(z)
+    function Vec(x, y, z) {
+        this.x = Number(x || 0);
+        this.y = Number(y || 0);
+        this.z = Number(z || 0);
     }
 
-    // Instance methods - modify this vector and return it
+    //------------------------------------------------------------------------------
+    // Instance methods that modify this vector and return it
+    //------------------------------------------------------------------------------
+
     /**
      * Add another vector or components to this vector
      * @param {Vec|number} v - Vector or x component to add
@@ -22,7 +33,9 @@ class Vec {
      * @param {number} [z] - Z component to add
      * @returns {Vec} This vector
      */
-    add(v) { return this.set(Vec.add(this, ...arguments)) }
+    Vec.prototype.add = function(v, y, z) {
+        return this.set(Vec.add(this, v, y, z));
+    };
 
     /**
      * Subtract another vector or components from this vector
@@ -31,54 +44,70 @@ class Vec {
      * @param {number} [z] - Z component to subtract
      * @returns {Vec} This vector
      */
-    sub(v) { return this.set(Vec.sub(this, ...arguments)) }
+    Vec.prototype.sub = function(v, y, z) {
+        return this.set(Vec.sub(this, v, y, z));
+    };
 
     /**
      * Multiply this vector by another vector or scalar
      * @param {Vec|number} v - Vector or scalar to multiply by
      * @returns {Vec} This vector
      */
-    mult(v) { return this.set(Vec.mult(this, ...arguments)) }
+    Vec.prototype.mult = function(v) {
+        return this.set(Vec.mult(this, v));
+    };
 
     /**
      * Divide this vector by another vector or scalar
      * @param {Vec|number} v - Vector or scalar to divide by
      * @returns {Vec} This vector
      */
-    div(v) { return this.set(Vec.div(this, ...arguments)) }
+    Vec.prototype.div = function(v) {
+        return this.set(Vec.div(this, v));
+    };
 
     /**
      * Invert this vector's direction
      * @returns {Vec} This vector
      */
-    invert() { return this.set(Vec.invert(this)) }
+    Vec.prototype.invert = function() {
+        return this.set(Vec.invert(this));
+    };
 
     /**
-     * Normalize this vector to a length of 1
+     * Normalize this vector to length 1
      * @returns {Vec} This vector
      */
-    norm() { return this.set(Vec.norm(this)) }
+    Vec.prototype.norm = function() {
+        return this.set(Vec.norm(this));
+    };
 
     /**
      * Set this vector's magnitude
      * @param {number} mag - Target magnitude
      * @returns {Vec} This vector
      */
-    setMag(mag) { return this.set(Vec.setMag(this, mag)) }
+    Vec.prototype.setMag = function(mag) {
+        return this.set(Vec.setMag(this, mag));
+    };
 
     /**
      * Limit this vector's magnitude
      * @param {number} mag - Maximum magnitude
      * @returns {Vec} This vector
      */
-    limit(mag) { return this.set(Vec.limit(this, mag)) }
+    Vec.prototype.limit = function(mag) {
+        return this.set(Vec.limit(this, mag));
+    };
 
     /**
      * Rotate this vector in the XY plane
      * @param {number} theta - Angle in radians
      * @returns {Vec} This vector
      */
-    rotate2D(theta) { return this.set(Vec.rotate2D(this, theta)) }
+    Vec.prototype.rotate2D = function(theta) {
+        return this.set(Vec.rotate2D(this, theta));
+    };
 
     /**
      * Linearly interpolate this vector toward another vector
@@ -86,67 +115,93 @@ class Vec {
      * @param {number} amount - Interpolation amount (0-1)
      * @returns {Vec} This vector
      */
-    lerp(v, amount) { return this.set(Vec.lerp(this, v, amount)) }
+    Vec.prototype.lerp = function(v, amount) {
+        return this.set(Vec.lerp(this, v, amount));
+    };
 
     /**
      * Round this vector's components to nearest integer
      * @returns {Vec} This vector
      */
-    round() { return this.set(Vec.round(this)) }
+    Vec.prototype.round = function() {
+        return this.set(Vec.round(this));
+    };
+
+    //------------------------------------------------------------------------------
+    // Instance methods that return scalar values
+    //------------------------------------------------------------------------------
 
     /**
      * Get this vector's heading (angle relative to positive x-axis)
      * @returns {number} Angle in radians
      */
-    heading() { return Vec.heading(this) }
+    Vec.prototype.heading = function() {
+        return Vec.heading(this);
+    };
 
     /**
      * Calculate angle between this vector and another vector
      * @param {Vec} v - Vector to calculate angle with
      * @returns {number} Angle in radians
      */
-    angleBetween(v) { return Vec.angleBetween(this, v) }
+    Vec.prototype.angleBetween = function(v) {
+        return Vec.angleBetween(this, v);
+    };
 
-    // Instance methods - return scalar values
     /**
      * Calculate dot product with another vector
      * @param {Vec} v - Vector to dot with
      * @returns {number} Dot product
      */
-    dot(v) { return Vec.dot(this, v) }
+    Vec.prototype.dot = function(v) {
+        return Vec.dot(this, v);
+    };
 
     /**
      * Calculate cross product with another vector
      * @param {Vec} v - Vector to cross with
      * @returns {Vec} Cross product vector
      */
-    cross(v) { return Vec.cross(this, v) }
+    Vec.prototype.cross = function(v) {
+        return Vec.cross(this, v);
+    };
 
     /**
      * Calculate squared magnitude of this vector
      * @returns {number} Squared magnitude
      */
-    magSq() { return Vec.magSq(this) }
+    Vec.prototype.magSq = function() {
+        return Vec.magSq(this);
+    };
 
     /**
      * Calculate magnitude of this vector
      * @returns {number} Magnitude
      */
-    mag() { return Vec.mag(this) }
+    Vec.prototype.mag = function() {
+        return Vec.mag(this);
+    };
 
     /**
      * Check if this vector equals another vector
      * @param {Vec} v - Vector to compare with
      * @returns {boolean} True if vectors are equal
      */
-    isEqual(v) { return Vec.isEqual(this, v) }
+    Vec.prototype.isEqual = function(v) {
+        return Vec.isEqual(this, v);
+    };
 
-    // Instance methods - return new objects
+    //------------------------------------------------------------------------------
+    // Instance methods that return new objects
+    //------------------------------------------------------------------------------
+
     /**
      * Create a copy of this vector
      * @returns {Vec} New vector with same components
      */
-    clone() { return new Vec(this.x, this.y, this.z) }
+    Vec.prototype.clone = function() {
+        return Vec.new(this.x, this.y, this.z);
+    };
 
     /**
      * Set this vector's components
@@ -155,20 +210,23 @@ class Vec {
      * @param {number} [z] - Z component
      * @returns {Vec} This vector
      */
-    set(x, y, z) {
+    Vec.prototype.set = function(x, y, z) {
         if (x instanceof Vec) {
-            this.x = x.x
-            this.y = x.y
-            this.z = x.z
+            this.x = x.x;
+            this.y = x.y;
+            this.z = x.z;
         } else {
-            this.x = x
-            this.y = y
-            this.z = z
+            this.x = x;
+            this.y = y;
+            this.z = z;
         }
-        return this
-    }
+        return this;
+    };
 
+    //------------------------------------------------------------------------------
     // Static vector operations - return new vectors
+    //------------------------------------------------------------------------------
+
     /**
      * Add two vectors
      * @param {Vec} v1 - First vector
@@ -177,16 +235,16 @@ class Vec {
      * @param {number} [z] - Z component
      * @returns {Vec} New sum vector
      */
-    static add(v1, v2) {
+    Vec.add = function(v1, v2) {
         if (v2 instanceof Vec) {
-            return new Vec(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z)
+            return Vec.new(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z);
         }
-        return new Vec(
-            v1.x + (arguments[1] ?? 0),
-            v1.y + (arguments[2] ?? 0),
-            v1.z + (arguments[3] ?? 0)
-        )
-    }
+        return Vec.new(
+            v1.x + (arguments[1] || 0),
+            v1.y + (arguments[2] || 0),
+            v1.z + (arguments[3] || 0)
+        );
+    };
 
     /**
      * Subtract two vectors
@@ -196,16 +254,16 @@ class Vec {
      * @param {number} [z] - Z component
      * @returns {Vec} New difference vector
      */
-    static sub(v1, v2) {
+    Vec.sub = function(v1, v2) {
         if (v2 instanceof Vec) {
-            return new Vec(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z)
+            return Vec.new(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z);
         }
-        return new Vec(
-            v1.x - (arguments[1] ?? 0),
-            v1.y - (arguments[2] ?? 0),
-            v1.z - (arguments[3] ?? 0)
-        )
-    }
+        return Vec.new(
+            v1.x - (arguments[1] || 0),
+            v1.y - (arguments[2] || 0),
+            v1.z - (arguments[3] || 0)
+        );
+    };
 
     /**
      * Multiply a vector by another vector or scalar
@@ -213,12 +271,12 @@ class Vec {
      * @param {Vec|number} v2 - Vector or scalar to multiply by
      * @returns {Vec} New product vector
      */
-    static mult(v1, v2) {
+    Vec.mult = function(v1, v2) {
         if (v2 instanceof Vec) {
-            return new Vec(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z)
+            return Vec.new(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z);
         }
-        return new Vec(v1.x * v2, v1.y * v2, v1.z * v2)
-    }
+        return Vec.new(v1.x * v2, v1.y * v2, v1.z * v2);
+    };
 
     /**
      * Divide a vector by another vector or scalar
@@ -226,12 +284,12 @@ class Vec {
      * @param {Vec|number} v2 - Vector or scalar to divide by
      * @returns {Vec} New quotient vector
      */
-    static div(v1, v2) {
+    Vec.div = function(v1, v2) {
         if (v2 instanceof Vec) {
-            return new Vec(v1.x / v2.x, v1.y / v2.y, v1.z / v2.z)
+            return Vec.new(v1.x / v2.x, v1.y / v2.y, v1.z / v2.z);
         }
-        return new Vec(v1.x / v2, v1.y / v2, v1.z / v2)
-    }
+        return Vec.new(v1.x / v2, v1.y / v2, v1.z / v2);
+    };
 
     /**
      * Calculate dot product of two vectors
@@ -239,36 +297,36 @@ class Vec {
      * @param {Vec} v2 - Second vector
      * @returns {number} Dot product
      */
-    static dot(v1, v2) {
-        return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z
-    }
+    Vec.dot = function(v1, v2) {
+        return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+    };
 
     /**
      * Calculate squared magnitude of a vector
      * @param {Vec} v - Vector to calculate
      * @returns {number} Squared magnitude
      */
-    static magSq(v) {
-        return v.x * v.x + v.y * v.y + v.z * v.z
-    }
+    Vec.magSq = function(v) {
+        return v.x * v.x + v.y * v.y + v.z * v.z;
+    };
 
     /**
      * Calculate magnitude of a vector
      * @param {Vec} v - Vector to calculate
      * @returns {number} Magnitude
      */
-    static mag(v) {
-        return Math.sqrt(Vec.magSq(v))
-    }
+    Vec.mag = function(v) {
+        return Math.sqrt(Vec.magSq(v));
+    };
 
     /**
      * Normalize a vector to length 1
      * @param {Vec} v - Vector to normalize
      * @returns {Vec} New normalized vector
      */
-    static norm(v) {
-        return v.clone().div(v.mag())
-    }
+    Vec.norm = function(v) {
+        return v.clone().div(v.mag());
+    };
 
     /**
      * Set a vector's magnitude
@@ -276,9 +334,9 @@ class Vec {
      * @param {number} mag - Target magnitude
      * @returns {Vec} New vector with specified magnitude
      */
-    static setMag(v, mag) {
-        return v.clone().norm().mult(mag)
-    }
+    Vec.setMag = function(v, mag) {
+        return v.clone().norm().mult(mag);
+    };
 
     /**
      * Limit a vector's magnitude
@@ -286,27 +344,27 @@ class Vec {
      * @param {number} mag - Maximum magnitude
      * @returns {Vec} New vector with limited magnitude
      */
-    static limit(v, mag) {
-        return v.mag() > mag ? v.clone().setMag(mag) : v.clone()
-    }
+    Vec.limit = function(v, mag) {
+        return v.mag() > mag ? v.clone().setMag(mag) : v.clone();
+    };
 
     /**
      * Invert a vector's direction
      * @param {Vec} v - Vector to invert
      * @returns {Vec} New inverted vector
      */
-    static invert(v) {
-        return new Vec(-v.x, -v.y, -v.z)
-    }
+    Vec.invert = function(v) {
+        return Vec.new(-v.x, -v.y, -v.z);
+    };
 
     /**
      * Round a vector's components to nearest integer
      * @param {Vec} v - Vector to round
      * @returns {Vec} New vector with rounded components
      */
-    static round(v) {
-        return new Vec(Math.round(v.x), Math.round(v.y), Math.round(v.z))
-    }
+    Vec.round = function(v) {
+        return Vec.new(Math.round(v.x), Math.round(v.y), Math.round(v.z));
+    };
 
     /**
      * Check if two vectors are equal
@@ -314,9 +372,9 @@ class Vec {
      * @param {Vec} v2 - Second vector
      * @returns {boolean} True if vectors are equal
      */
-    static isEqual(v1, v2) {
-        return v1.x === v2.x && v1.y === v2.y && v1.z === v2.z
-    }
+    Vec.isEqual = function(v1, v2) {
+        return v1.x === v2.x && v1.y === v2.y && v1.z === v2.z;
+    };
 
     /**
      * Linearly interpolate between two vectors
@@ -325,14 +383,16 @@ class Vec {
      * @param {number} amount - Interpolation amount (0-1)
      * @returns {Vec} New interpolated vector
      */
-    static lerp(v1, v2, amount) {
-        const lerp = (a, b, amnt) => a + (b - a) * amnt
-        return new Vec(
+    Vec.lerp = function(v1, v2, amount) {
+        var lerp = function(a, b, amnt) {
+            return a + (b - a) * amnt;
+        };
+        return Vec.new(
             lerp(v1.x, v2.x, amount),
             lerp(v1.y, v2.y, amount),
             lerp(v1.z, v2.z, amount)
-        )
-    }
+        );
+    };
 
     /**
      * Rotate a vector around an arbitrary axis by theta radians
@@ -341,19 +401,22 @@ class Vec {
      * @param {number} theta - Angle in radians
      * @returns {Vec} New rotated vector
      */
-    static axisRot(v, axis, theta) {
-        const cos = Math.cos(theta)
-        const sin = Math.sin(theta)
-        const t = 1 - cos
-        const { x, y, z } = Vec.norm(axis)
-        const before = v.clone()
+    Vec.axisRot = function(v, axis, theta) {
+        var cos = Math.cos(theta);
+        var sin = Math.sin(theta);
+        var t = 1 - cos;
+        var normAxis = Vec.norm(axis);
+        var x = normAxis.x;
+        var y = normAxis.y;
+        var z = normAxis.z;
+        var before = v.clone();
 
-        return new Vec(
-            new Vec(cos + x*x*t, x*y*t - z*sin, x*z*t + y*sin).dot(before),
-            new Vec(x*y*t + z*sin, cos + y*y*t, y*z*t - x*sin).dot(before),
-            new Vec(z*x*t - y*sin, z*y*t + x*sin, cos + z*z*t).dot(before)
-        )
-    }
+        return Vec.new(
+            Vec.new(cos + x*x*t, x*y*t - z*sin, x*z*t + y*sin).dot(before),
+            Vec.new(x*y*t + z*sin, cos + y*y*t, y*z*t - x*sin).dot(before),
+            Vec.new(z*x*t - y*sin, z*y*t + x*sin, cos + z*z*t).dot(before)
+        );
+    };
 
     /**
      * Rotate a vector in the XY plane by theta radians
@@ -361,18 +424,18 @@ class Vec {
      * @param {number} theta - Angle in radians
      * @returns {Vec} New rotated vector
      */
-    static rotate2D(v, theta) {
-        return Vec.axisRot(v, new Vec(0, 0, 1), theta)
-    }
+    Vec.rotate2D = function(v, theta) {
+        return Vec.axisRot(v, Vec.new(0, 0, 1), theta);
+    };
 
     /**
      * Get a vector's heading (angle relative to positive x-axis)
      * @param {Vec} v - Vector to get heading of
      * @returns {number} Angle in radians
      */
-    static heading(v) {
-        return Math.atan2(v.y, v.x)
-    }
+    Vec.heading = function(v) {
+        return Math.atan2(v.y, v.x);
+    };
 
     /**
      * Calculate angle between two vectors
@@ -380,7 +443,9 @@ class Vec {
      * @param {Vec} v2 - Second vector
      * @returns {number} Angle in radians
      */
-    static angleBetween(v1, v2) {
-        return Math.acos(Vec.dot(v1, v2) / (Vec.mag(v1) * Vec.mag(v2)))
-    }
-} 
+    Vec.angleBetween = function(v1, v2) {
+        return Math.acos(Vec.dot(v1, v2) / (Vec.mag(v1) * Vec.mag(v2)));
+    };
+
+    return Vec;
+})();
