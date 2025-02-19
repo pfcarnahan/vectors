@@ -21,11 +21,11 @@ import { Vec } from './vector.js';
 ```
 ```html
 <!-- Include the vector.js file from the CDN -->
-<script src="https://cdn.jsdelivr.net/gh/pfcarnahan/js-libs@1.0.0/vector.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/pfcarnahan/js-libs@1.0.1/vector.js"></script>
 ```
 
 For Khan Academy's Processing.js environment, copy the contents of vectorPJS.js into your program:
-1. Open [vectorPJS.js](https://cdn.jsdelivr.net/gh/pfcarnahan/js-libs@1.0.0/vectorPJS.js)
+1. Open [vectorPJS.js](https://cdn.jsdelivr.net/gh/pfcarnahan/js-libs@1.0.1/vectorPJS.js)
 2. Copy the entire file contents
 3. Paste at the top of your Khan Academy program
 

@@ -302,6 +302,20 @@ class Vec {
     }
 
     /**
+    * Calculate cross product of two vectors
+    * @param {Vec} v1 - First vector
+    * @param {Vec} v2 - Second vector
+    * @returns {Vec} Cross product
+    */
+   static cross(v1, v2) {
+       return new Vec(
+           v1.y * v2.z - v1.z * v2.y,
+           v1.z * v2.x - v1.x * v2.z,
+           v1.x * v2.y - v1.y * v2.x
+       );
+   }
+
+    /**
      * Calculate squared magnitude of a vector
      * @param {Vec} v - Vector to calculate
      * @returns {number} Squared magnitude

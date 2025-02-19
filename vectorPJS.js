@@ -1,5 +1,5 @@
 var Vec = (function() {
-    //Version 1.0.0
+    //Version 1.0.1
     
     Object.constructor.prototype.new = (function() {
         var obj = Object.create(this.prototype);
@@ -371,6 +371,20 @@ var Vec = (function() {
     Vec.dot = function(v1, v2) {
         return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
     };
+
+    /**
+      * Calculate cross product of two vectors
+      * @param {Vec} v1 - First vector
+      * @param {Vec} v2 - Second vector
+      * @returns {Vec} Cross product
+      */
+     Vec.cross = function(v1, v2) {
+         return Vec.new(
+             v1.y * v2.z - v1.z * v2.y,
+             v1.z * v2.x - v1.x * v2.z,
+             v1.x * v2.y - v1.y * v2.x
+         );
+     };
 
     /**
      * Calculate squared magnitude of a vector
