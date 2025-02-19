@@ -1,5 +1,5 @@
 var Vec = (function() {
-    //Version 1.1.0
+    //Version 1.0.0
     
     Object.constructor.prototype.new = (function() {
         var obj = Object.create(this.prototype);
@@ -127,6 +127,24 @@ var Vec = (function() {
         return this.set(Vec.round(this));
     };
 
+    /**
+     * Project this vector onto another vector
+     * @param {Vec} onto - Vector to project onto
+     * @returns {Vec} This vector
+     */
+    Vec.prototype.project = function(onto) {
+        return this.set(Vec.project(this, onto));
+    };
+
+    /**
+     * Reflect this vector across a normal
+     * @param {Vec} normal - Normal vector
+     * @returns {Vec} This vector
+     */
+    Vec.prototype.reflect = function(normal) {
+        return this.set(Vec.reflect(this, normal));
+    };
+
     //------------------------------------------------------------------------------
     // Instance methods that return scalar values
     //------------------------------------------------------------------------------
@@ -158,15 +176,6 @@ var Vec = (function() {
     };
 
     /**
-     * Calculate cross product with another vector
-     * @param {Vec} v - Vector to cross with
-     * @returns {Vec} Cross product vector
-     */
-    Vec.prototype.cross = function(v) {
-        return Vec.cross(this, v);
-    };
-
-    /**
      * Calculate squared magnitude of this vector
      * @returns {number} Squared magnitude
      */
@@ -189,6 +198,51 @@ var Vec = (function() {
      */
     Vec.prototype.isEqual = function(v) {
         return Vec.isEqual(this, v);
+    };
+
+    /**
+     * Calculate the 2D distance between two vectors
+     * @param {Vec} v - Vector to calculate distance to
+     * @returns {number} 2D Distance
+     */
+    Vec.prototype.dist2D = function(v) {
+        return Vec.dist2D(this, v);
+    };
+
+    /**
+     * Calculate the 3D distance between two vectors
+     * @param {Vec} v - Vector to calculate distance to
+     * @returns {number} 3D Distance
+     */
+    Vec.prototype.dist3D = function(v) {
+        return Vec.dist3D(this, v);
+    };
+
+    /**
+     * Calculate the distance between two vectors
+     * @param {Vec} v - Vector to calculate distance to
+     * @returns {number} Distance
+     */
+    Vec.prototype.dist = function(v) {
+        return Vec.dist(this, v);
+    };
+
+    /**
+     * Check if this is a zero vector
+     * @returns {boolean} True if vector is zero vector
+     */
+    Vec.prototype.isZero = function() {
+        return Vec.isZero(this);
+    };
+
+    /**
+     * Check if vectors are equal within a given tolerance
+     * @param {Vec} v - Vector to compare with
+     * @param {number} tolerance - Tolerance value
+     * @returns {boolean} True if vectors are equal within tolerance
+     */
+    Vec.prototype.isEqualWithTolerance = function(v, tolerance) {
+        return Vec.isEqualWithTolerance(this, v, tolerance);
     };
 
     //------------------------------------------------------------------------------
@@ -221,6 +275,23 @@ var Vec = (function() {
             this.z = z;
         }
         return this;
+    };
+
+    /**
+     * Calculate cross product with another vector
+     * @param {Vec} v - Vector to cross with
+     * @returns {Vec} Cross product vector
+     */
+    Vec.prototype.cross = function(v) {
+        return Vec.cross(this, v);
+    };
+
+    /**
+     * Convert vector to array
+     * @returns {number[]} Array with vector components
+     */
+    Vec.prototype.toArray = function() {
+        return [this.x, this.y, this.z];
     };
 
     //------------------------------------------------------------------------------
@@ -445,6 +516,94 @@ var Vec = (function() {
      */
     Vec.angleBetween = function(v1, v2) {
         return Math.acos(Vec.dot(v1, v2) / (Vec.mag(v1) * Vec.mag(v2)));
+    };
+
+    /**
+     * Project a vector onto another vector
+     * @param {Vec} v - Vector to project
+     * @param {Vec} onto - Vector to project onto
+     * @returns {Vec} New projected vector
+     */
+    Vec.project = function(v, onto) {
+        var magSq = Vec.magSq(onto);
+        if (magSq === 0) {
+            return Vec.new(); // Avoid division by zero
+        }
+        var scale = Vec.dot(v, onto) / magSq;
+        return onto.clone().mult(scale);
+    };
+
+    /**
+     * Reflect a vector across a normal
+     * @param {Vec} v - Vector to reflect
+     * @param {Vec} normal - Normal vector
+     * @returns {Vec} New reflected vector
+     */
+    Vec.reflect = function(v, normal) {
+        var proj = Vec.project(v, normal);
+        return Vec.sub(v, Vec.mult(proj, 2));
+    };
+
+    /**
+     * Generate a random 2D vector with components between min and max
+     * @param {number} [min=-1] - Minimum value for components
+     * @param {number} [max=1] - Maximum value for components
+     * @returns {Vec} New random 2D vector
+     */
+    Vec.random2D = function(min, max) {
+        min = min === undefined ? -1 : min;
+        max = max === undefined ? 1 : max;
+        var x = Math.random() * (max - min) + min;
+        var y = Math.random() * (max - min) + min;
+        return Vec.new(x, y);
+    };
+
+    /**
+     * Generate a random 3D vector with components between min and max
+     * @param {number} [min=-1] - Minimum value for components
+     * @param {number} [max=1] - Maximum value for components
+     * @returns {Vec} New random 3D vector
+     */
+    Vec.random3D = function(min, max) {
+        min = min === undefined ? -1 : min;
+        max = max === undefined ? 1 : max;
+        var x = Math.random() * (max - min) + min;
+        var y = Math.random() * (max - min) + min;
+        var z = Math.random() * (max - min) + min;
+        return Vec.new(x, y, z);
+    };
+
+    /**
+     * Check if a vector is a zero vector
+     * @param {Vec} v - Vector to check
+     * @returns {boolean} True if vector is zero vector
+     */
+    Vec.isZero = function(v) {
+        return v.x === 0 && v.y === 0 && v.z === 0;
+    };
+
+    /**
+     * Create a vector from an array
+     * @param {number[]} arr - Array with vector components
+     * @returns {Vec} New vector
+     */
+    Vec.fromArray = function(arr) {
+        return Vec.new(arr[0] || 0, arr[1] || 0, arr[2] || 0);
+    };
+
+    /**
+     * Check if two vectors are equal within a given tolerance
+     * @param {Vec} v1 - First vector
+     * @param {Vec} v2 - Second vector
+     * @param {number} tolerance - Tolerance value
+     * @returns {boolean} True if vectors are equal within tolerance
+     */
+    Vec.isEqualWithTolerance = function(v1, v2, tolerance) {
+        return (
+            Math.abs(v1.x - v2.x) <= tolerance &&
+            Math.abs(v1.y - v2.y) <= tolerance &&
+            Math.abs(v1.z - v2.z) <= tolerance
+        );
     };
 
     return Vec;

@@ -107,6 +107,20 @@ class Vec {
      */
     angleBetween(v) { return Vec.angleBetween(this, v) }
 
+    /**
+     * Project a vector onto another vector
+     * @param {Vec} onto - Vector to project onto
+     * @returns {Vec} This vector
+     */
+    project(onto) { return this.set(Vec.project(this, onto)) }
+
+    /**
+     * Reflect a vector across a normal
+     * @param {Vec} normal - Normal vector
+     * @returns {Vec} This vector
+     */
+    reflect(normal) { return this.set(Vec.reflect(this, normal)) }
+
     // Instance methods - return scalar values
     /**
      * Calculate dot product with another vector
@@ -135,11 +149,49 @@ class Vec {
     mag() { return Vec.mag(this) }
 
     /**
+     * Calculate the 2D distance between two vectors
+     * @param {Vec} v1 - First vector
+     * @param {Vec} v2 - Second vector
+     * @returns {number} 2D Distance
+     */
+    dist2D(v) { return Vec.dist2D(this, v) }
+
+    /**
+     * Calculate the 3D distance between two vectors
+     * @param {Vec} v1 - First vector
+     * @param {Vec} v2 - Second vector
+     * @returns {number} 3D Distance
+     */
+    dist3D(v) { return Vec.dist3D(this, v) }
+
+    /**
+     * Calculate the distance between two vectors
+     * @param {Vec} v1 - First vector
+     * @param {Vec} v2 - Second vector
+     * @returns {number} Distance
+     */
+    dist(v) { return Vec.dist(this, v) }
+
+    /**
      * Check if this vector equals another vector
      * @param {Vec} v - Vector to compare with
      * @returns {boolean} True if vectors are equal
      */
     isEqual(v) { return Vec.isEqual(this, v) }
+
+    /**
+     * Check if vectors are equal within a given tolerance
+     * @param {Vec} v - Vector to compare with
+     * @param {number} tolerance - Tolerance value
+     * @returns {boolean} True if vectors are equal within tolerance
+     */
+    isEqualWithTolerance(v, tolerance) { return Vec.isEqualWithTolerance(this, v, tolerance) }
+
+    /**
+     * Check if this is a zero vector
+     * @returns {boolean} True if vector is zero vector
+     */
+    isZero() { return Vec.isZero(this) }
 
     // Instance methods - return new objects
     /**
@@ -167,6 +219,12 @@ class Vec {
         }
         return this
     }
+
+    /**
+     * Convert vector to array
+     * @returns {number[]} Array with vector components
+     */
+    toArray() { return [this.x, this.y, this.z] }
 
     // Static vector operations - return new vectors
     /**
@@ -262,6 +320,41 @@ class Vec {
     }
 
     /**
+     * Calculate the 2D distance between two vectors
+     * @param {Vec} v1 - First vector
+     * @param {Vec} v2 - Second vector
+     * @returns {number} 2D Distance
+     */
+    static dist2D(v1, v2) {
+        const dx = v1.x - v2.x;
+        const dy = v1.y - v2.y;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    /**
+     * Calculate the 3D distance between two vectors
+     * @param {Vec} v1 - First vector
+     * @param {Vec} v2 - Second vector
+     * @returns {number} 3D Distance
+     */
+    static dist3D(v1, v2) {
+        const dx = v1.x - v2.x;
+        const dy = v1.y - v2.y;
+        const dz = v1.z - v2.z;
+        return Math.sqrt(dx * dx + dy * dy + dz * dz);
+    }
+
+    /**
+     * Calculate the distance between two vectors
+     * @param {Vec} v1 - First vector
+     * @param {Vec} v2 - Second vector
+     * @returns {number} Distance
+     */
+    static dist(v1, v2) {
+        return Vec.dist3D(v1,v2)
+    }
+
+    /**
      * Normalize a vector to length 1
      * @param {Vec} v - Vector to normalize
      * @returns {Vec} New normalized vector
@@ -316,6 +409,21 @@ class Vec {
      */
     static isEqual(v1, v2) {
         return v1.x === v2.x && v1.y === v2.y && v1.z === v2.z
+    }
+
+    /**
+     * Check if two vectors are equal within a given tolerance
+     * @param {Vec} v1 - First vector
+     * @param {Vec} v2 - Second vector
+     * @param {number} tolerance - Tolerance value
+     * @returns {boolean} True if vectors are equal within tolerance
+     */
+    static isEqualWithTolerance(v1, v2, tolerance) {
+        return (
+            Math.abs(v1.x - v2.x) <= tolerance &&
+            Math.abs(v1.y - v2.y) <= tolerance &&
+            Math.abs(v1.z - v2.z) <= tolerance
+        );
     }
 
     /**
@@ -383,4 +491,73 @@ class Vec {
     static angleBetween(v1, v2) {
         return Math.acos(Vec.dot(v1, v2) / (Vec.mag(v1) * Vec.mag(v2)))
     }
-} 
+
+    /**
+     * Project a vector onto another vector
+     * @param {Vec} v - Vector to project
+     * @param {Vec} onto - Vector to project onto
+     * @returns {Vec} New projected vector
+     */
+    static project(v, onto) {
+        const magSq = Vec.magSq(onto);
+        if (magSq === 0) {
+            return new Vec(); // Avoid division by zero
+        }
+        const scale = Vec.dot(v, onto) / magSq;
+        return onto.clone().mult(scale);
+    }
+
+    /**
+     * Reflect a vector across a normal
+     * @param {Vec} v - Vector to reflect
+     * @param {Vec} normal - Normal vector
+     * @returns {Vec} New reflected vector
+     */
+    static reflect(v, normal) {
+        const proj = Vec.project(v, normal);
+        return Vec.sub(v, Vec.mult(proj, 2));
+    }
+
+    /**
+     * Generate a random 2D vector with components between min and max, defaults to unit vector
+     * @param {number} [min=-1] - Minimum value for components
+     * @param {number} [max=1] - Maximum value for components
+     * @returns {Vec} New random 2D vector
+     */
+    static random2D(min = -1, max = 1) {
+        const x = Math.random() * (max - min) + min;
+        const y = Math.random() * (max - min) + min;
+        return new Vec(x, y);
+    }
+
+    /**
+     * Generate a random 3D vector with components between min and max, defaults to unit vector
+     * @param {number} [min=-1] - Minimum value for components
+     * @param {number} [max=1] - Maximum value for components
+     * @returns {Vec} New random 3D vector
+     */
+    static random3D(min = -1, max = 1) {
+        const x = Math.random() * (max - min) + min;
+        const y = Math.random() * (max - min) + min;
+        const z = Math.random() * (max - min) + min;
+        return new Vec(x, y, z);
+    }
+
+    /**
+     * Check if a vector is a zero vector
+     * @param {Vec} v - Vector to check
+     * @returns {boolean} True if vector is zero vector
+     */
+    static isZero(v) {
+        return v.x === 0 && v.y === 0 && v.z === 0;
+    }
+
+    /**
+     * Create a vector from an array
+     * @param {number[]} arr - Array with vector components
+     * @returns {Vec} New vector
+     */
+    static fromArray(arr) {
+        return new Vec(arr[0] ?? 0, arr[1] ?? 0, arr[2] ?? 0);
+    }
+}

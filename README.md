@@ -21,11 +21,11 @@ import { Vec } from './vector.js';
 ```
 ```html
 <!-- Include the vector.js file from the CDN -->
-<script src="https://cdn.jsdelivr.net/gh/pfcarnahan/js-libs@main/vector.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/pfcarnahan/js-libs@1.0.0/vector.js"></script>
 ```
 
 For Khan Academy's Processing.js environment, copy the contents of vectorPJS.js into your program:
-1. Open [vectorPJS.js](https://cdn.jsdelivr.net/gh/pfcarnahan/js-libs@main/vectorPJS.js)
+1. Open [vectorPJS.js](https://cdn.jsdelivr.net/gh/pfcarnahan/js-libs@1.0.0/vectorPJS.js)
 2. Copy the entire file contents
 3. Paste at the top of your Khan Academy program
 
@@ -51,8 +51,8 @@ const v4 = Vec.add(v1, v2);
 ### Vector Operations
 
 #### Instance Methods (modify in place)
-- `add(v)` - Add another vector
-- `sub(v)` - Subtract another vector
+- `add(v)` - Add another vector or components
+- `sub(v)` - Subtract another vector or components
 - `mult(n)` - Multiply by scalar or vector
 - `div(n)` - Divide by scalar or vector
 - `invert()` - Invert direction
@@ -62,16 +62,24 @@ const v4 = Vec.add(v1, v2);
 - `rotate2D(θ)` - Rotate in XY plane
 - `lerp(v, amt)` - Linear interpolation
 - `round()` - Round components to integers
+- `project(onto)` - Project onto another vector
+- `reflect(normal)` - Reflect across normal
 
 #### Instance Methods (return values)
 - `dot(v)` - Dot product
 - `cross(v)` - Cross product
 - `magSq()` - Squared magnitude
 - `mag()` - Magnitude
+- `dist2D(v)` - 2D distance to vector
+- `dist3D(v)` - 3D distance to vector
+- `dist(v)` - Distance to vector
 - `heading()` - 2D angle from x-axis
 - `angleBetween(v)` - Angle to another vector
 - `isEqual(v)` - Vector equality check
 - `clone()` - Create copy
+- `isEqualWithTolerance(v, t)` - Equality within tolerance
+- `isZero()` - Check if zero vector
+- `toArray()` - Convert to array
 
 #### Static Methods
 - `Vec.add(v1, v2)` - Add two vectors or add components to v1
@@ -88,6 +96,13 @@ const v4 = Vec.add(v1, v2);
 - `Vec.angleBetween(v1, v2)` - Get angle between vectors in radians
 - `Vec.rotate2D(v, θ)` - Rotate vector in XY plane
 - `Vec.axisRot(v, axis, θ)` - Rotate vector around arbitrary axis
+- `Vec.project(v, onto)` - Project vector onto another vector
+- `Vec.reflect(v, normal)` - Reflect vector across normal
+- `Vec.random2D([min, max])` - Generate random 2D vector
+- `Vec.random3D([min, max])` - Generate random 3D vector
+- `Vec.isZero(v)` - Check if vector is zero vector
+- `Vec.fromArray(arr)` - Create vector from array
+- `Vec.isEqualWithTolerance(v1, v2, t)` - Check equality within tolerance
 
 ### Examples
 
@@ -109,6 +124,11 @@ const heading = v2.heading();        // ~0.785 radians (45°)
 
 // Rotations
 const rotated = new Vec(1, 0).rotate2D(Math.PI/2);  // (0, 1)
+
+// Advanced operations
+const projected = new Vec(3, 4).project(new Vec(1, 0));  // (3, 0)
+const reflected = new Vec(1, 1).reflect(new Vec(0, 1));  // (1, -1)
+const random = Vec.random2D();  // Random unit vector
 ```
 
 ## License
