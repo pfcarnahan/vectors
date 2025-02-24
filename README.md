@@ -1,19 +1,16 @@
-# JavaScript Libraries
+# Vector Library
 
-A collection of JavaScript utilities.
+A 2D/3D vector library with common vector operations. The library provides both instance methods that modify vectors in place and static methods that return new vectors.
 
-## Table of Contents
-- [Vector Library](#vector-library)
-  - [Installation](#installation)
-  - [Usage](#usage)
-  - [Vector Operations](#vector-operations)
-  - [Examples](#examples)
+To use it in 2D, simpy omit the `z` parameter in all methods.
 
-## Vector Library
+# Table of Contents
+- [Installation](#installation)
+- [Usage](#usage)
+- [Vector Operations](#vector-operations)
+- [Examples](#examples)
 
-A lightweight and efficient 2D/3D vector library with common vector operations. The library provides both instance methods that modify vectors in place and static methods that return new vectors.
-
-### Installation
+## Installation
 
 ```html
 <!-- Include the vector.js file from the CDN -->
@@ -27,7 +24,7 @@ For Khan Academy's Processing.js environment, copy the contents of vectorPJS.js 
 
 When using the copied vectorPJS.js version, use `CONSTRUCTOR.new(x, y, z)` to create objects instead of `new CONSTRUCTOR(x, y, z)`. This syntax is required for Khan Academy's Processing.js environment. It helps prevent memory leaks.
 
-### Usage
+## Usage
 
 ```javascript
 // Create vectors
@@ -44,9 +41,9 @@ v1.add(v2)
 const v4 = Vec.add(v1, v2);
 ```
 
-### Vector Operations
+## Vector Operations
 
-#### Instance Methods (modify in place)
+### Instance Methods (modify in place)
 - `add(v)` - Add another vector or components
 - `sub(v)` - Subtract another vector or components
 - `mult(n)` - Multiply by scalar or vector
@@ -62,7 +59,7 @@ const v4 = Vec.add(v1, v2);
 - `project(onto)` - Project onto another vector
 - `reflect(normal)` - Reflect across normal
 
-#### Instance Methods (return values)
+### Instance Methods (return values)
 - `dot(v)` - Dot product
 - `cross(v)` - Cross product
 - `magSq()` - Squared magnitude
@@ -79,7 +76,7 @@ const v4 = Vec.add(v1, v2);
 - `toArray()` - Convert to array
 - `toString()` - Return string representation of vector
 
-#### Static Methods
+### Static Methods
 - `Vec.add(v1, v2)` - Add two vectors or add components to v1
 - `Vec.sub(v1, v2)` - Subtract vectors or subtract components from v1
 - `Vec.mult(v, n)` - Multiply vector by scalar or another vector
@@ -104,7 +101,7 @@ const v4 = Vec.add(v1, v2);
 - `Vec.fromAngles(theta, phi, length)` - Create a 3D vector from two angles (theta, phi) and a length (spherical coordinates).
 - `Vec.isEqualWithTolerance(v1, v2, t)` - Check equality within tolerance
 
-### Examples
+## Examples
 
 ```javascript
 // Basic vector math
@@ -133,6 +130,6 @@ const random = Vec.random2D();  // Random unit vector
 console.log(random) // Will output a random 2D vector like: `Vec(0.345678, 0.987654, 0)`
 ```
 
-## License
+# License
 
 MIT License - feel free to use this code in your projects.
