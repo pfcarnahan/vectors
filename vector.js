@@ -1,5 +1,8 @@
 /**
- * A 3D and 2D vector class with common vector operations
+ * @file vector.js
+ * @version 1.1.0
+ * @description A simple 2D and 3D vector library for JavaScript.
+ * This library provides a `Vec` object for performing common vector operations.
  */
 class Vec {
     /**
@@ -79,6 +82,14 @@ class Vec {
      * @returns {Vec} This vector
      */
     rotate2D(theta) { return this.set(Vec.rotate2D(this, theta)) }
+
+    /**
+     * Rotate a vector around an arbitrary axis by theta radians
+     * @param {Vec} axis - Axis to rotate around
+     * @param {number} theta - Angle in radians
+     * @returns {Vec} The rotated vector
+     */
+    axisRot(axis, theta) { return this.set(Vec.axisRot(this, axis, theta)) }
 
     /**
      * Linearly interpolate this vector toward another vector
@@ -225,6 +236,15 @@ class Vec {
      * @returns {number[]} Array with vector components
      */
     toArray() { return [this.x, this.y, this.z] }
+    
+    /**
+    * Create a string representation of a vector.
+    * Called automatically when you console.log a vector.
+    * @returns {string} String representation of the vector
+    */
+   toString() {
+       return `Vec(x: ${this.x}, y: ${this.y}, z: ${this.z})`;
+   }
 
     // Static vector operations - return new vectors
     /**
@@ -573,5 +593,30 @@ class Vec {
      */
     static fromArray(arr) {
         return new Vec(arr[0] ?? 0, arr[1] ?? 0, arr[2] ?? 0);
+    }
+
+    /**
+     * Create a 2D vector from angle and magnitude (polar coordinates)
+     * @param {number} angle - Angle in radians
+     * @param {number} magnitude - Magnitude of the vector
+     * @returns {Vec} New vector
+     */
+    static fromAngle(angle, magnitude) {
+        const x = magnitude * Math.cos(angle);
+        const y = magnitude * Math.sin(angle);
+        return new Vec(x, y, 0);
+    }
+    /**
+     * Create a 3D vector from two angles (theta, phi) and a length (spherical coordinates)
+     * @param {number} theta - Angle in radians in the XY plane
+     * @param {number} phi - Angle in radians from the positive Z axis
+     * @param {number} length - Length of the vector
+     * @returns {Vec} New vector
+     */
+    static fromAngles(theta, phi, length) {
+        const x = length * Math.sin(phi) * Math.cos(theta);
+        const y = length * Math.sin(phi) * Math.sin(theta);
+        const z = length * Math.cos(phi);
+        return new Vec(x, y, z);
     }
 }

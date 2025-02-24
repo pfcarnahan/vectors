@@ -15,21 +15,17 @@ A lightweight and efficient 2D/3D vector library with common vector operations. 
 
 ### Installation
 
-```javascript
-// Include the vector.js file in your project
-import { Vec } from './vector.js';
-```
 ```html
 <!-- Include the vector.js file from the CDN -->
-<script src="https://cdn.jsdelivr.net/gh/pfcarnahan/js-libs@1.0.1/vector.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/pfcarnahan/vectors@1.1.0/vector.js"></script>
 ```
 
 For Khan Academy's Processing.js environment, copy the contents of vectorPJS.js into your program:
-1. Open [vectorPJS.js](https://cdn.jsdelivr.net/gh/pfcarnahan/js-libs@1.0.1/vectorPJS.js)
+1. Open [vectorPJS.js](https://cdn.jsdelivr.net/gh/pfcarnahan/vectors@1.1.0/vectorPJS.js)
 2. Copy the entire file contents
 3. Paste at the top of your Khan Academy program
 
-When using the copied vectorPJS.js version, use `Vec.new(x, y, z)` to create vectors instead of `new Vec(x, y, z)`. This syntax is required for Khan Academy's Processing.js environment.
+When using the copied vectorPJS.js version, use `CONSTRUCTOR.new(x, y, z)` to create objects instead of `new CONSTRUCTOR(x, y, z)`. This syntax is required for Khan Academy's Processing.js environment. It helps prevent memory leaks.
 
 ### Usage
 
@@ -60,6 +56,7 @@ const v4 = Vec.add(v1, v2);
 - `setMag(m)` - Set magnitude
 - `limit(m)` - Limit magnitude
 - `rotate2D(θ)` - Rotate in XY plane
+- `axisRot(axis, θ)` - Rotate vector around arbitrary axis
 - `lerp(v, amt)` - Linear interpolation
 - `round()` - Round components to integers
 - `project(onto)` - Project onto another vector
@@ -80,6 +77,7 @@ const v4 = Vec.add(v1, v2);
 - `isEqualWithTolerance(v, t)` - Equality within tolerance
 - `isZero()` - Check if zero vector
 - `toArray()` - Convert to array
+- `toString()` - Return string representation of vector
 
 #### Static Methods
 - `Vec.add(v1, v2)` - Add two vectors or add components to v1
@@ -102,6 +100,8 @@ const v4 = Vec.add(v1, v2);
 - `Vec.random3D([min, max])` - Generate random 3D vector
 - `Vec.isZero(v)` - Check if vector is zero vector
 - `Vec.fromArray(arr)` - Create vector from array
+- `Vec.fromAngle(angle, magnitude)` - Create a 2D vector from an angle and magnitude (polar coordinates).
+- `Vec.fromAngles(theta, phi, length)` - Create a 3D vector from two angles (theta, phi) and a length (spherical coordinates).
 - `Vec.isEqualWithTolerance(v1, v2, t)` - Check equality within tolerance
 
 ### Examples
@@ -129,6 +129,8 @@ const rotated = new Vec(1, 0).rotate2D(Math.PI/2);  // (0, 1)
 const projected = new Vec(3, 4).project(new Vec(1, 0));  // (3, 0)
 const reflected = new Vec(1, 1).reflect(new Vec(0, 1));  // (1, -1)
 const random = Vec.random2D();  // Random unit vector
+
+console.log(random) // Will output a random 2D vector like: `Vec(0.345678, 0.987654, 0)`
 ```
 
 ## License

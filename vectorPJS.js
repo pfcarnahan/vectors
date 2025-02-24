@@ -1,20 +1,25 @@
+/**
+ * @file vectorPJS.js
+ * @version 1.1.0
+ * @description A simple 2D and 3D vector library for JavaScript.
+ * This library provides a `Vec` object for performing common vector operations.
+ */
 var Vec = (function() {
-    //Version 1.0.1
-    
-    Object.constructor.prototype.new = (function() {
+
+    // Patch for creating new objects using the form ClassName.new()
+    Object.constructor.prototype.new = function() {
         var obj = Object.create(this.prototype);
         this.apply(obj, arguments);
         return obj;
-    }); // 'new' leak patch. Calling '{CONSTRUCTOR NAME}.new({ARGUMENTS})' Will function the same as 'new {CONSTRUCTOR NAME}({ARGUMENTS})'
+    };
 
 
     /**
-     * Create a new vector
+     * Creates a new 3D vector.
      * @constructor
-     * @param {number} [x=0] - X component
-     * @param {number} [y=0] - Y component
-     * @param {number} [z=0] - Z component
-     * @returns {Vec} New Vec instance
+     * @param {number} [x=0] - The x component.
+     * @param {number} [y=0] - The y component.
+     * @param {number} [z=0] - The z component.
      */
     function Vec(x, y, z) {
         this.x = Number(x || 0);
@@ -22,247 +27,251 @@ var Vec = (function() {
         this.z = Number(z || 0);
     }
 
-    //------------------------------------------------------------------------------
-    // Instance methods that modify this vector and return it
-    //------------------------------------------------------------------------------
+    // Instance methods that modify the vector and return it
 
     /**
-     * Add another vector or components to this vector
-     * @param {Vec|number} v - Vector or x component to add
-     * @param {number} [y] - Y component to add
-     * @param {number} [z] - Z component to add
-     * @returns {Vec} This vector
+     * Adds another vector or components to this vector.
+     * @param {Vec|number} v - The vector or x component to add.
+     * @param {number} [y] - The y component to add.
+     * @param {number} [z] - The z component to add.
+     * @returns {Vec} This vector.
      */
     Vec.prototype.add = function(v, y, z) {
         return this.set(Vec.add(this, v, y, z));
     };
 
     /**
-     * Subtract another vector or components from this vector
-     * @param {Vec|number} v - Vector or x component to subtract
-     * @param {number} [y] - Y component to subtract
-     * @param {number} [z] - Z component to subtract
-     * @returns {Vec} This vector
+     * Subtracts another vector or components from this vector.
+     * @param {Vec|number} v - The vector or x component to subtract.
+     * @param {number} [y] - The y component to subtract.
+     * @param {number} [z] - The z component to subtract.
+     * @returns {Vec} This vector.
      */
     Vec.prototype.sub = function(v, y, z) {
         return this.set(Vec.sub(this, v, y, z));
     };
 
     /**
-     * Multiply this vector by another vector or scalar
-     * @param {Vec|number} v - Vector or scalar to multiply by
-     * @returns {Vec} This vector
+     * Multiplies this vector by another vector or a scalar.
+     * @param {Vec|number} v - The vector or scalar to multiply by.
+     * @returns {Vec} This vector.
      */
     Vec.prototype.mult = function(v) {
         return this.set(Vec.mult(this, v));
     };
 
     /**
-     * Divide this vector by another vector or scalar
-     * @param {Vec|number} v - Vector or scalar to divide by
-     * @returns {Vec} This vector
+     * Divides this vector by another vector or a scalar.
+     * @param {Vec|number} v - The vector or scalar to divide by.
+     * @returns {Vec} This vector.
      */
     Vec.prototype.div = function(v) {
         return this.set(Vec.div(this, v));
     };
 
     /**
-     * Invert this vector's direction
-     * @returns {Vec} This vector
+     * Inverts this vector's direction.
+     * @returns {Vec} This vector.
      */
     Vec.prototype.invert = function() {
         return this.set(Vec.invert(this));
     };
 
     /**
-     * Normalize this vector to length 1
-     * @returns {Vec} This vector
+     * Normalizes this vector to length 1.
+     * @returns {Vec} This vector.
      */
     Vec.prototype.norm = function() {
         return this.set(Vec.norm(this));
     };
 
     /**
-     * Set this vector's magnitude
-     * @param {number} mag - Target magnitude
-     * @returns {Vec} This vector
+     * Sets this vector's magnitude.
+     * @param {number} mag - The target magnitude.
+     * @returns {Vec} This vector.
      */
     Vec.prototype.setMag = function(mag) {
         return this.set(Vec.setMag(this, mag));
     };
 
     /**
-     * Limit this vector's magnitude
-     * @param {number} mag - Maximum magnitude
-     * @returns {Vec} This vector
+     * Limits this vector's magnitude.
+     * @param {number} mag - The maximum magnitude.
+     * @returns {Vec} This vector.
      */
     Vec.prototype.limit = function(mag) {
         return this.set(Vec.limit(this, mag));
     };
 
     /**
-     * Rotate this vector in the XY plane
-     * @param {number} theta - Angle in radians
-     * @returns {Vec} This vector
+     * Rotates this vector in the XY plane.
+     * @param {number} theta - The angle in radians.
+     * @returns {Vec} This vector.
      */
     Vec.prototype.rotate2D = function(theta) {
         return this.set(Vec.rotate2D(this, theta));
     };
+    /**
+     * Rotate a vector around an arbitrary axis by theta radians
+     * @param {Vec} axis - Axis to rotate around
+     * @param {number} theta - Angle in radians
+     * @returns {Vec} The rotated vector
+     */
+    Vec.prototype.axisRot = function(axis, theta) {
+        return this.set(Vec.axisRot(this, axis, theta));
+    }
 
     /**
-     * Linearly interpolate this vector toward another vector
-     * @param {Vec} v - Target vector
-     * @param {number} amount - Interpolation amount (0-1)
-     * @returns {Vec} This vector
+     * Linearly interpolates this vector toward another vector.
+     * @param {Vec} v - The target vector.
+     * @param {number} amount - The interpolation amount (0-1).
+     * @returns {Vec} This vector.
      */
     Vec.prototype.lerp = function(v, amount) {
         return this.set(Vec.lerp(this, v, amount));
     };
 
     /**
-     * Round this vector's components to nearest integer
-     * @returns {Vec} This vector
+     * Rounds this vector's components to the nearest integer.
+     * @returns {Vec} This vector.
      */
     Vec.prototype.round = function() {
         return this.set(Vec.round(this));
     };
 
     /**
-     * Project this vector onto another vector
-     * @param {Vec} onto - Vector to project onto
-     * @returns {Vec} This vector
+     * Projects this vector onto another vector.
+     * @param {Vec} onto - The vector to project onto.
+     * @returns {Vec} This vector.
      */
     Vec.prototype.project = function(onto) {
         return this.set(Vec.project(this, onto));
     };
 
     /**
-     * Reflect this vector across a normal
-     * @param {Vec} normal - Normal vector
-     * @returns {Vec} This vector
+     * Reflects this vector across a normal.
+     * @param {Vec} normal - The normal vector.
+     * @returns {Vec} This vector.
      */
     Vec.prototype.reflect = function(normal) {
         return this.set(Vec.reflect(this, normal));
     };
 
-    //------------------------------------------------------------------------------
     // Instance methods that return scalar values
-    //------------------------------------------------------------------------------
 
     /**
-     * Get this vector's heading (angle relative to positive x-axis)
-     * @returns {number} Angle in radians
+     * Gets this vector's heading (angle relative to positive x-axis).
+     * @returns {number} The angle in radians.
      */
     Vec.prototype.heading = function() {
         return Vec.heading(this);
     };
 
     /**
-     * Calculate angle between this vector and another vector
-     * @param {Vec} v - Vector to calculate angle with
-     * @returns {number} Angle in radians
+     * Calculates the angle between this vector and another vector.
+     * @param {Vec} v - The other vector.
+     * @returns {number} The angle in radians.
      */
     Vec.prototype.angleBetween = function(v) {
         return Vec.angleBetween(this, v);
     };
 
     /**
-     * Calculate dot product with another vector
-     * @param {Vec} v - Vector to dot with
-     * @returns {number} Dot product
+     * Calculates the dot product with another vector.
+     * @param {Vec} v - The other vector.
+     * @returns {number} The dot product.
      */
     Vec.prototype.dot = function(v) {
         return Vec.dot(this, v);
     };
 
     /**
-     * Calculate squared magnitude of this vector
-     * @returns {number} Squared magnitude
+     * Calculates the squared magnitude of this vector.
+     * @returns {number} The squared magnitude.
      */
     Vec.prototype.magSq = function() {
         return Vec.magSq(this);
     };
 
     /**
-     * Calculate magnitude of this vector
-     * @returns {number} Magnitude
+     * Calculates the magnitude of this vector.
+     * @returns {number} The magnitude.
      */
     Vec.prototype.mag = function() {
         return Vec.mag(this);
     };
 
     /**
-     * Check if this vector equals another vector
-     * @param {Vec} v - Vector to compare with
-     * @returns {boolean} True if vectors are equal
+     * Checks if this vector equals another vector.
+     * @param {Vec} v - The vector to compare with.
+     * @returns {boolean} True if the vectors are equal, false otherwise.
      */
     Vec.prototype.isEqual = function(v) {
         return Vec.isEqual(this, v);
     };
 
     /**
-     * Calculate the 2D distance between two vectors
-     * @param {Vec} v - Vector to calculate distance to
-     * @returns {number} 2D Distance
+     * Calculates the 2D distance between this vector and another vector.
+     * @param {Vec} v - The other vector.
+     * @returns {number} The 2D distance.
      */
     Vec.prototype.dist2D = function(v) {
         return Vec.dist2D(this, v);
     };
 
     /**
-     * Calculate the 3D distance between two vectors
-     * @param {Vec} v - Vector to calculate distance to
-     * @returns {number} 3D Distance
+     * Calculates the 3D distance between this vector and another vector.
+     * @param {Vec} v - The other vector.
+     * @returns {number} The 3D distance.
      */
     Vec.prototype.dist3D = function(v) {
         return Vec.dist3D(this, v);
     };
 
+
     /**
-     * Calculate the distance between two vectors
-     * @param {Vec} v - Vector to calculate distance to
-     * @returns {number} Distance
+     * Calculates the distance between this vector and another vector.
+     * @param {Vec} v - The other vector.
+     * @returns {number} The distance.
      */
     Vec.prototype.dist = function(v) {
         return Vec.dist(this, v);
     };
 
     /**
-     * Check if this is a zero vector
-     * @returns {boolean} True if vector is zero vector
+     * Checks if this vector is a zero vector.
+     * @returns {boolean} True if this vector is a zero vector.
      */
     Vec.prototype.isZero = function() {
         return Vec.isZero(this);
     };
 
     /**
-     * Check if vectors are equal within a given tolerance
-     * @param {Vec} v - Vector to compare with
-     * @param {number} tolerance - Tolerance value
-     * @returns {boolean} True if vectors are equal within tolerance
+     * Checks if this vector is equal to another vector within a given tolerance.
+     * @param {Vec} v - The vector to compare with.
+     * @param {number} tolerance - Tolerance value.
+     * @returns {boolean} True if vectors are equal within tolerance.
      */
     Vec.prototype.isEqualWithTolerance = function(v, tolerance) {
         return Vec.isEqualWithTolerance(this, v, tolerance);
     };
 
-    //------------------------------------------------------------------------------
-    // Instance methods that return new objects
-    //------------------------------------------------------------------------------
+    // Instance methods that return new vectors
 
     /**
-     * Create a copy of this vector
-     * @returns {Vec} New vector with same components
+     * Creates a copy of this vector.
+     * @returns {Vec} A new vector with the same components.
      */
     Vec.prototype.clone = function() {
         return Vec.new(this.x, this.y, this.z);
     };
 
     /**
-     * Set this vector's components
-     * @param {Vec|number} x - Vector or x component
-     * @param {number} [y] - Y component
-     * @param {number} [z] - Z component
-     * @returns {Vec} This vector
+     * Sets this vector's components.
+     * @param {Vec|number} x - The vector or x component.
+     * @param {number} [y] - The y component.
+     * @param {number} [z] - The z component.
+     * @returns {Vec} This vector.
      */
     Vec.prototype.set = function(x, y, z) {
         if (x instanceof Vec) {
@@ -278,69 +287,68 @@ var Vec = (function() {
     };
 
     /**
-     * Calculate cross product with another vector
-     * @param {Vec} v - Vector to cross with
-     * @returns {Vec} Cross product vector
+     * Calculates the cross product of this vector and another vector.
+     * @param {Vec} v The other vector.
+     * @returns {Vec} The cross product.
      */
     Vec.prototype.cross = function(v) {
         return Vec.cross(this, v);
     };
 
     /**
-     * Convert vector to array
-     * @returns {number[]} Array with vector components
+     * Converts this vector to an array.
+     * @returns {number[]} An array containing the vector components [x, y, z].
      */
     Vec.prototype.toArray = function() {
         return [this.x, this.y, this.z];
-    };
-
-    //------------------------------------------------------------------------------
-    // Static vector operations - return new vectors
-    //------------------------------------------------------------------------------
+    }
 
     /**
-     * Add two vectors
-     * @param {Vec} v1 - First vector
-     * @param {Vec|number} v2 - Second vector or x component
-     * @param {number} [y] - Y component
-     * @param {number} [z] - Z component
-     * @returns {Vec} New sum vector
+    * Create a string representation of a vector.
+    * Called automatically when you console.log a vector.
+    * @returns {string} String representation of the vector
+    */
+    Vec.prototype.toString = function() {
+        return "Vec(x: "+this.x+", y: "+this.y+", z: "+this.z+")";
+    };
+
+    // Static vector operations
+
+    /**
+     * Adds two vectors or components.
+     * @param {Vec} v1 - The first vector.
+     * @param {Vec|number} v2 - The second vector or x component.
+     * @param {number} [y] - The y component.
+     * @param {number} [z] - The z component.
+     * @returns {Vec} The sum vector.
      */
-    Vec.add = function(v1, v2) {
+    Vec.add = function(v1, v2, y, z) {
         if (v2 instanceof Vec) {
             return Vec.new(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z);
         }
-        return Vec.new(
-            v1.x + (arguments[1] || 0),
-            v1.y + (arguments[2] || 0),
-            v1.z + (arguments[3] || 0)
-        );
+        return Vec.new(v1.x + (y || 0), v1.y + (z || 0), v1.z + (arguments[3] || 0));
     };
 
     /**
-     * Subtract two vectors
-     * @param {Vec} v1 - First vector
-     * @param {Vec|number} v2 - Second vector or x component
-     * @param {number} [y] - Y component
-     * @param {number} [z] - Z component
-     * @returns {Vec} New difference vector
+     * Subtracts two vectors or components.
+     * @param {Vec} v1 - The first vector.
+     * @param {Vec|number} v2 - The second vector or x component.
+     * @param {number} [y] - The y component.
+     * @param {number} [z] - The z component.
+     * @returns {Vec} The difference vector.
      */
-    Vec.sub = function(v1, v2) {
+    Vec.sub = function(v1, v2, y, z) {
         if (v2 instanceof Vec) {
             return Vec.new(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z);
         }
-        return Vec.new(
-            v1.x - (arguments[1] || 0),
-            v1.y - (arguments[2] || 0),
-            v1.z - (arguments[3] || 0)
-        );
+        return Vec.new(v1.x - (y || 0), v1.y - (z || 0), v1.z - (arguments[3] || 0));
     };
 
     /**
-     * Multiply a vector by another vector or scalar
-     * @param {Vec} v1 - Vector to multiply
-     * @param {Vec|number} v2 - Vector or scalar to multiply by
-     * @returns {Vec} New product vector
+     * Multiplies a vector by another vector or a scalar.
+     * @param {Vec} v1 - The vector to multiply.
+     * @param {Vec|number} v2 - The vector or scalar to multiply by.
+     * @returns {Vec} The product vector.
      */
     Vec.mult = function(v1, v2) {
         if (v2 instanceof Vec) {
@@ -350,10 +358,10 @@ var Vec = (function() {
     };
 
     /**
-     * Divide a vector by another vector or scalar
-     * @param {Vec} v1 - Vector to divide
-     * @param {Vec|number} v2 - Vector or scalar to divide by
-     * @returns {Vec} New quotient vector
+     * Divides a vector by another vector or a scalar.
+     * @param {Vec} v1 - The vector to divide.
+     * @param {Vec|number} v2 - The vector or scalar to divide by.
+     * @returns {Vec} The quotient vector.
      */
     Vec.div = function(v1, v2) {
         if (v2 instanceof Vec) {
@@ -363,120 +371,141 @@ var Vec = (function() {
     };
 
     /**
-     * Calculate dot product of two vectors
-     * @param {Vec} v1 - First vector
-     * @param {Vec} v2 - Second vector
-     * @returns {number} Dot product
+     * Calculates the dot product of two vectors.
+     * @param {Vec} v1 - The first vector.
+     * @param {Vec} v2 - The second vector.
+     * @returns {number} The dot product.
      */
     Vec.dot = function(v1, v2) {
         return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
     };
 
     /**
-      * Calculate cross product of two vectors
-      * @param {Vec} v1 - First vector
-      * @param {Vec} v2 - Second vector
-      * @returns {Vec} Cross product
-      */
-     Vec.cross = function(v1, v2) {
-         return Vec.new(
-             v1.y * v2.z - v1.z * v2.y,
-             v1.z * v2.x - v1.x * v2.z,
-             v1.x * v2.y - v1.y * v2.x
-         );
-     };
+     * Calculates the cross product of two vectors.
+     * @param {Vec} v1 - The first vector.
+     * @param {Vec} v2 - The second vector.
+     * @returns {Vec} The cross product.
+     */
+    Vec.cross = function(v1, v2) {
+        return Vec.new(
+            v1.y * v2.z - v1.z * v2.y,
+            v1.z * v2.x - v1.x * v2.z,
+            v1.x * v2.y - v1.y * v2.x
+        );
+    };
 
     /**
-     * Calculate squared magnitude of a vector
-     * @param {Vec} v - Vector to calculate
-     * @returns {number} Squared magnitude
+     * Calculates the squared magnitude of a vector.
+     * @param {Vec} v - The vector.
+     * @returns {number} The squared magnitude.
      */
     Vec.magSq = function(v) {
         return v.x * v.x + v.y * v.y + v.z * v.z;
     };
 
     /**
-     * Calculate magnitude of a vector
-     * @param {Vec} v - Vector to calculate
-     * @returns {number} Magnitude
+     * Calculates the magnitude of a vector.
+     * @param {Vec} v - The vector.
+     * @returns {number} The magnitude.
      */
     Vec.mag = function(v) {
         return Math.sqrt(Vec.magSq(v));
     };
 
     /**
-     * Normalize a vector to length 1
-     * @param {Vec} v - Vector to normalize
-     * @returns {Vec} New normalized vector
+     * Normalizes a vector to length 1.
+     * @param {Vec} v - The vector to normalize.
+     * @returns {Vec} The normalized vector.
      */
     Vec.norm = function(v) {
-        return v.clone().div(v.mag());
+        return Vec.div(v, v.mag());
     };
 
     /**
-     * Set a vector's magnitude
-     * @param {Vec} v - Vector to modify
-     * @param {number} mag - Target magnitude
-     * @returns {Vec} New vector with specified magnitude
+     * Sets a vector's magnitude.
+     * @param {Vec} v - The vector.
+     * @param {number} mag - The target magnitude.
+     * @returns {Vec} The vector with the new magnitude.
      */
     Vec.setMag = function(v, mag) {
         return v.clone().norm().mult(mag);
     };
 
     /**
-     * Limit a vector's magnitude
-     * @param {Vec} v - Vector to limit
-     * @param {number} mag - Maximum magnitude
-     * @returns {Vec} New vector with limited magnitude
+     * Limits a vector's magnitude.
+     * @param {Vec} v - The vector.
+     * @param {number} mag - The maximum magnitude.
+     * @returns {Vec} The limited vector.
      */
     Vec.limit = function(v, mag) {
-        return v.mag() > mag ? v.clone().setMag(mag) : v.clone();
+        return v.mag() > mag ? Vec.setMag(v, mag) : v.clone();
     };
 
     /**
-     * Invert a vector's direction
-     * @param {Vec} v - Vector to invert
-     * @returns {Vec} New inverted vector
+     * Inverts a vector's direction.
+     * @param {Vec} v - The vector to invert.
+     * @returns {Vec} The inverted vector.
      */
     Vec.invert = function(v) {
         return Vec.new(-v.x, -v.y, -v.z);
     };
 
     /**
-     * Round a vector's components to nearest integer
-     * @param {Vec} v - Vector to round
-     * @returns {Vec} New vector with rounded components
+     * Rounds a vector's components to the nearest integer.
+     * @param {Vec} v - The vector to round.
+     * @returns {Vec} The rounded vector.
      */
     Vec.round = function(v) {
         return Vec.new(Math.round(v.x), Math.round(v.y), Math.round(v.z));
     };
 
     /**
-     * Check if two vectors are equal
-     * @param {Vec} v1 - First vector
-     * @param {Vec} v2 - Second vector
-     * @returns {boolean} True if vectors are equal
+     * Calculate the 2D distance between two vectors.
+     * @param {Vec} v1 - The first vector.
+     * @param {Vec} v2 - The second vector.
+     * @returns {number} The 2D distance.
+     */
+    Vec.dist2D = function(v1, v2) {
+        const dx = v1.x - v2.x;
+        const dy = v1.y - v2.y;
+        return Math.sqrt(dx * dx + dy * dy);
+    };
+
+    /**
+     * Calculate the 3D distance between two vectors.
+     * @param {Vec} v1 - The first vector.
+     * @param {Vec} v2 - The second vector.
+     * @returns {number} The 3D distance.
+     */
+    Vec.dist3D = function(v1, v2) {
+        const dx = v1.x - v2.x;
+        const dy = v1.y - v2.y;
+        const dz = v1.z - v2.z;
+        return Math.sqrt(dx * dx + dy * dy + dz * dz);
+    };
+
+    /**
+     * Checks if two vectors are equal.
+     * @param {Vec} v1 - The first vector.
+     * @param {Vec} v2 - The second vector.
+     * @returns {boolean} True if equal, false otherwise.
      */
     Vec.isEqual = function(v1, v2) {
         return v1.x === v2.x && v1.y === v2.y && v1.z === v2.z;
     };
 
     /**
-     * Linearly interpolate between two vectors
-     * @param {Vec} v1 - Start vector
-     * @param {Vec} v2 - End vector
-     * @param {number} amount - Interpolation amount (0-1)
-     * @returns {Vec} New interpolated vector
+     * Linearly interpolates between two vectors.
+     * @param {Vec} v1 - The start vector.
+     * @param {Vec} v2 - The end vector.
+     * @param {number} amount - The interpolation amount (0-1).
+     * @returns {Vec} The interpolated vector.
      */
     Vec.lerp = function(v1, v2, amount) {
         var lerp = function(a, b, amnt) {
             return a + (b - a) * amnt;
         };
-        return Vec.new(
-            lerp(v1.x, v2.x, amount),
-            lerp(v1.y, v2.y, amount),
-            lerp(v1.z, v2.z, amount)
-        );
+        return Vec.new(lerp(v1.x, v2.x, amount), lerp(v1.y, v2.y, amount), lerp(v1.z, v2.z, amount));
     };
 
     /**
@@ -487,14 +516,11 @@ var Vec = (function() {
      * @returns {Vec} New rotated vector
      */
     Vec.axisRot = function(v, axis, theta) {
-        var cos = Math.cos(theta);
-        var sin = Math.sin(theta);
-        var t = 1 - cos;
-        var normAxis = Vec.norm(axis);
-        var x = normAxis.x;
-        var y = normAxis.y;
-        var z = normAxis.z;
-        var before = v.clone();
+        const cos = Math.cos(theta);
+        const sin = Math.sin(theta);
+        const t = 1 - cos;
+        const { x, y, z } = Vec.norm(axis);
+        const before = v.clone();
 
         return Vec.new(
             Vec.new(cos + x*x*t, x*y*t - z*sin, x*z*t + y*sin).dot(before),
@@ -504,54 +530,54 @@ var Vec = (function() {
     };
 
     /**
-     * Rotate a vector in the XY plane by theta radians
-     * @param {Vec} v - Vector to rotate
-     * @param {number} theta - Angle in radians
-     * @returns {Vec} New rotated vector
+     * Rotates a vector in the XY plane.
+     * @param {Vec} v - The vector to rotate.
+     * @param {number} theta - The angle in radians.
+     * @returns {Vec} The rotated vector.
      */
     Vec.rotate2D = function(v, theta) {
         return Vec.axisRot(v, Vec.new(0, 0, 1), theta);
     };
 
     /**
-     * Get a vector's heading (angle relative to positive x-axis)
-     * @param {Vec} v - Vector to get heading of
-     * @returns {number} Angle in radians
+     * Gets a vector's heading (angle relative to positive x-axis).
+     * @param {Vec} v - The vector.
+     * @returns {number} The heading in radians.
      */
     Vec.heading = function(v) {
         return Math.atan2(v.y, v.x);
     };
 
     /**
-     * Calculate angle between two vectors
-     * @param {Vec} v1 - First vector
-     * @param {Vec} v2 - Second vector
-     * @returns {number} Angle in radians
+     * Calculates the angle between two vectors.
+     * @param {Vec} v1 - The first vector.
+     * @param {Vec} v2 - The second vector.
+     * @returns {number} The angle in radians.
      */
     Vec.angleBetween = function(v1, v2) {
         return Math.acos(Vec.dot(v1, v2) / (Vec.mag(v1) * Vec.mag(v2)));
     };
 
     /**
-     * Project a vector onto another vector
-     * @param {Vec} v - Vector to project
-     * @param {Vec} onto - Vector to project onto
-     * @returns {Vec} New projected vector
+     * Projects a vector onto another vector.
+     * @param {Vec} v - The vector to project.
+     * @param {Vec} onto - The vector to project onto.
+     * @returns {Vec} The projected vector.
      */
     Vec.project = function(v, onto) {
         var magSq = Vec.magSq(onto);
         if (magSq === 0) {
-            return Vec.new(); // Avoid division by zero
+            return Vec.new();
         }
         var scale = Vec.dot(v, onto) / magSq;
-        return onto.clone().mult(scale);
+        return Vec.mult(onto, scale);
     };
 
     /**
-     * Reflect a vector across a normal
-     * @param {Vec} v - Vector to reflect
-     * @param {Vec} normal - Normal vector
-     * @returns {Vec} New reflected vector
+     * Reflects a vector across a normal.
+     * @param {Vec} v - The vector to reflect.
+     * @param {Vec} normal - The normal vector.
+     * @returns {Vec} The reflected vector.
      */
     Vec.reflect = function(v, normal) {
         var proj = Vec.project(v, normal);
@@ -559,10 +585,10 @@ var Vec = (function() {
     };
 
     /**
-     * Generate a random 2D vector with components between min and max
-     * @param {number} [min=-1] - Minimum value for components
-     * @param {number} [max=1] - Maximum value for components
-     * @returns {Vec} New random 2D vector
+     * Generates a random 2D vector.
+     * @param {number} [min=-1] - The minimum value for components.
+     * @param {number} [max=1] - The maximum value for components.
+     * @returns {Vec} A random 2D vector.
      */
     Vec.random2D = function(min, max) {
         min = min === undefined ? -1 : min;
@@ -573,10 +599,10 @@ var Vec = (function() {
     };
 
     /**
-     * Generate a random 3D vector with components between min and max
-     * @param {number} [min=-1] - Minimum value for components
-     * @param {number} [max=1] - Maximum value for components
-     * @returns {Vec} New random 3D vector
+     * Generates a random 3D vector.
+     * @param {number} [min=-1] - The minimum value for components.
+     * @param {number} [max=1] - The maximum value for components.
+     * @returns {Vec} A random 3D vector.
      */
     Vec.random3D = function(min, max) {
         min = min === undefined ? -1 : min;
@@ -588,37 +614,63 @@ var Vec = (function() {
     };
 
     /**
-     * Check if a vector is a zero vector
-     * @param {Vec} v - Vector to check
-     * @returns {boolean} True if vector is zero vector
+     * Create a vector from an angle and magnitude.
+     * @param {number} angle The angle in radians.
+     * @param {number} magnitude The magnitude.
+     * @returns {Vec} The new vector.
+     */
+    Vec.fromAngle = function(angle, magnitude) {
+        const x = magnitude * Math.cos(angle);
+        const y = magnitude * Math.sin(angle);
+        return Vec.new(x, y, 0);
+    };
+
+    /**
+     * Creates a vector from spherical coordinates.
+     * @param {number} theta - The azimuthal angle in radians.
+     * @param {number} phi - The polar angle in radians.
+     * @param {number} length - The radial distance or magnitude.
+     * @returns {Vec} The new vector.
+     */
+    Vec.fromAngles = function(theta, phi, length) {
+        const x = length * Math.sin(phi) * Math.cos(theta);
+        const y = length * Math.sin(phi) * Math.sin(theta);
+        const z = length * Math.cos(phi);
+        return Vec.new(x, y, z);
+    };
+
+    /**
+     * Checks if a vector is a zero vector.
+     * @param {Vec} v - The vector to check.
+     * @returns {boolean} True if the vector is a zero vector.
      */
     Vec.isZero = function(v) {
         return v.x === 0 && v.y === 0 && v.z === 0;
     };
 
     /**
-     * Create a vector from an array
-     * @param {number[]} arr - Array with vector components
-     * @returns {Vec} New vector
+     * Creates a vector from an array.
+     * @param {number[]} arr - The array [x, y, z].
+     * @returns {Vec} The new vector.
      */
     Vec.fromArray = function(arr) {
         return Vec.new(arr[0] || 0, arr[1] || 0, arr[2] || 0);
     };
 
     /**
-     * Check if two vectors are equal within a given tolerance
-     * @param {Vec} v1 - First vector
-     * @param {Vec} v2 - Second vector
-     * @param {number} tolerance - Tolerance value
-     * @returns {boolean} True if vectors are equal within tolerance
+     * Checks if two vectors are equal within a tolerance.
+     * @param {Vec} v1 - The first vector.
+     * @param {Vec} v2 - The second vector.
+     * @param {number} tolerance - The tolerance value.
+     * @returns {boolean} True if equal within tolerance.
      */
     Vec.isEqualWithTolerance = function(v1, v2, tolerance) {
-        return (
-            Math.abs(v1.x - v2.x) <= tolerance &&
+        return (Math.abs(v1.x - v2.x) <= tolerance &&
             Math.abs(v1.y - v2.y) <= tolerance &&
-            Math.abs(v1.z - v2.z) <= tolerance
-        );
+            Math.abs(v1.z - v2.z) <= tolerance);
     };
+
+    Vec.dist = Vec.dist3D;
 
     return Vec;
 })();
