@@ -58,23 +58,30 @@ const v4 = Vec.add(v1, v2);
 - `round()` - Round components to integers
 - `project(onto)` - Project onto another vector
 - `reflect(normal)` - Reflect across normal
+- `set(x, y, z)` - Set components of vector to x, y and z, or x if x is a vector.
 
 ### Instance Methods (return values)
+- `heading()` - 2D angle from x-axis
+- `angleBetween(v)` - Angle to another vector
 - `dot(v)` - Dot product
-- `cross(v)` - Cross product
 - `magSq()` - Squared magnitude
 - `mag()` - Magnitude
+- `isEqual(v)` - Vector equality check
 - `dist2D(v)` - 2D distance to vector
 - `dist3D(v)` - 3D distance to vector
 - `dist(v)` - Distance to vector
-- `heading()` - 2D angle from x-axis
-- `angleBetween(v)` - Angle to another vector
-- `isEqual(v)` - Vector equality check
-- `clone()` - Create copy
-- `isEqualWithTolerance(v, t)` - Equality within tolerance
+- `distSq(v)` - Squared distance to vector
 - `isZero()` - Check if zero vector
+- `isEqualWithTolerance(v, t)` - Equality within tolerance
+
+### Instance Methods (return new Vec)
+ - `clone()` - Create copy
+ - `cross(v)` - Cross product of this and another vector
+
+### Instance Methods (return new format)
 - `toArray()` - Convert to array
 - `toString()` - Return string representation of vector
+
 
 ### Static Methods
 - `Vec.add(v1, v2)` - Add two vectors or add components to v1
@@ -83,23 +90,32 @@ const v4 = Vec.add(v1, v2);
 - `Vec.div(v, n)` - Divide vector by scalar or another vector
 - `Vec.dot(v1, v2)` - Calculate dot product
 - `Vec.cross(v1, v2)` - Calculate cross product
+- `Vec.magSq(v)` - Magnitude squared of a vector
+- `Vec.mag(v)` - Magnitude of a vector
 - `Vec.norm(v)` - Get normalized (unit) vector
 - `Vec.setMag(v, m)` - Get vector with specified magnitude
 - `Vec.limit(v, m)` - Limit vector's magnitude
+- `Vec.invert(v)` - Invert the direction of a vector
+- `Vec.round(v)` - Round the components of a vector to integers
+- `Vec.dist2D(v1, v2)` - 2D distance between two vectors
+- `Vec.dist3D(v1, v2)` - 3D distance between two vectors
+- `Vec.dist(v1, v2)` - Distance between two vectors
+- `Vec.distSq(v1, v2)` - Squared distance between two vectors
+- `Vec.isEqual(v1, v2)` - Check if two vectors are equal
 - `Vec.lerp(v1, v2, amt)` - Linear interpolation between vectors
+- `Vec.axisRot(v, axis, θ)` - Rotate vector around arbitrary axis
+- `Vec.rotate2D(v, θ)` - Rotate vector in XY plane
 - `Vec.heading(v)` - Get angle from x-axis in radians
 - `Vec.angleBetween(v1, v2)` - Get angle between vectors in radians
-- `Vec.rotate2D(v, θ)` - Rotate vector in XY plane
-- `Vec.axisRot(v, axis, θ)` - Rotate vector around arbitrary axis
 - `Vec.project(v, onto)` - Project vector onto another vector
 - `Vec.reflect(v, normal)` - Reflect vector across normal
 - `Vec.random2D([min, max])` - Generate random 2D vector
 - `Vec.random3D([min, max])` - Generate random 3D vector
 - `Vec.isZero(v)` - Check if vector is zero vector
 - `Vec.fromArray(arr)` - Create vector from array
+- `Vec.isEqualWithTolerance(v1, v2, t)` - Check equality within tolerance
 - `Vec.fromAngle(angle, magnitude)` - Create a 2D vector from an angle and magnitude (polar coordinates).
 - `Vec.fromAngles(theta, phi, length)` - Create a 3D vector from two angles (theta, phi) and a length (spherical coordinates).
-- `Vec.isEqualWithTolerance(v1, v2, t)` - Check equality within tolerance
 
 ## Examples
 

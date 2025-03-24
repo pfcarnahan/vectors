@@ -1,9 +1,3 @@
-/**
- * @file vector.js
- * @version 1.1.0
- * @description A simple 2D and 3D vector library for JavaScript.
- * This library provides a `Vec` object for performing common vector operations.
- */
 class Vec {
     /**
      * Create a new vector
@@ -106,19 +100,6 @@ class Vec {
     round() { return this.set(Vec.round(this)) }
 
     /**
-     * Get this vector's heading (angle relative to positive x-axis)
-     * @returns {number} Angle in radians
-     */
-    heading() { return Vec.heading(this) }
-
-    /**
-     * Calculate angle between this vector and another vector
-     * @param {Vec} v - Vector to calculate angle with
-     * @returns {number} Angle in radians
-     */
-    angleBetween(v) { return Vec.angleBetween(this, v) }
-
-    /**
      * Project a vector onto another vector
      * @param {Vec} onto - Vector to project onto
      * @returns {Vec} This vector
@@ -132,20 +113,46 @@ class Vec {
      */
     reflect(normal) { return this.set(Vec.reflect(this, normal)) }
 
+    /**
+     * Set this vector's components
+     * @param {Vec|number} x - Vector or x component
+     * @param {number} [y] - Y component
+     * @param {number} [z] - Z component
+     * @returns {Vec} This vector
+     */
+    set(x, y, z) {
+        if (x instanceof Vec) {
+            this.x = x.x
+            this.y = x.y
+            this.z = x.z
+        } else {
+            this.x = x
+            this.y = y
+            this.z = z
+        }
+        return this
+    }
+
     // Instance methods - return scalar values
+    /**
+     * Get this vector's heading (angle relative to positive x-axis)
+     * @returns {number} Angle in radians
+     */
+    heading() { return Vec.heading(this) }
+
+    /**
+     * Calculate angle between this vector and another vector
+     * @param {Vec} v - Vector to calculate angle with
+     * @returns {number} Angle in radians
+     */
+    angleBetween(v) { return Vec.angleBetween(this, v) }
+
     /**
      * Calculate dot product with another vector
      * @param {Vec} v - Vector to dot with
      * @returns {number} Dot product
      */
     dot(v) { return Vec.dot(this, v) }
-
-    /**
-     * Calculate cross product with another vector
-     * @param {Vec} v - Vector to cross with
-     * @returns {Vec} Cross product vector
-     */
-    cross(v) { return Vec.cross(this, v) }
 
     /**
      * Calculate squared magnitude of this vector
@@ -158,6 +165,13 @@ class Vec {
      * @returns {number} Magnitude
      */
     mag() { return Vec.mag(this) }
+
+    /**
+     * Check if this vector equals another vector
+     * @param {Vec} v - Vector to compare with
+     * @returns {boolean} True if vectors are equal
+     */
+    isEqual(v) { return Vec.isEqual(this, v) }
 
     /**
      * Calculate the 2D distance between two vectors
@@ -184,11 +198,18 @@ class Vec {
     dist(v) { return Vec.dist(this, v) }
 
     /**
-     * Check if this vector equals another vector
-     * @param {Vec} v - Vector to compare with
-     * @returns {boolean} True if vectors are equal
+     * Calculate the squared distance between two vectors
+     * @param {Vec} v1 - First vector
+     * @param {Vec} v2 - Second vector
+     * @returns {number} Squared Distance
      */
-    isEqual(v) { return Vec.isEqual(this, v) }
+    distSq(v) { return Vec.distSq(this, v) }
+
+    /**
+     * Check if this is a zero vector
+     * @returns {boolean} True if vector is zero vector
+     */
+    isZero() { return Vec.isZero(this) }
 
     /**
      * Check if vectors are equal within a given tolerance
@@ -198,13 +219,7 @@ class Vec {
      */
     isEqualWithTolerance(v, tolerance) { return Vec.isEqualWithTolerance(this, v, tolerance) }
 
-    /**
-     * Check if this is a zero vector
-     * @returns {boolean} True if vector is zero vector
-     */
-    isZero() { return Vec.isZero(this) }
-
-    // Instance methods - return new objects
+    // Instance methods - return new vectors
     /**
      * Create a copy of this vector
      * @returns {Vec} New vector with same components
@@ -212,25 +227,13 @@ class Vec {
     clone() { return new Vec(this.x, this.y, this.z) }
 
     /**
-     * Set this vector's components
-     * @param {Vec|number} x - Vector or x component
-     * @param {number} [y] - Y component
-     * @param {number} [z] - Z component
-     * @returns {Vec} This vector
+     * Calculate cross product with another vector
+     * @param {Vec} v - Vector to cross with
+     * @returns {Vec} Cross product vector
      */
-    set(x, y, z) {
-        if (x instanceof Vec) {
-            this.x = x.x
-            this.y = x.y
-            this.z = x.z
-        } else {
-            this.x = x
-            this.y = y
-            this.z = z
-        }
-        return this
-    }
+    cross(v) { return Vec.cross(this, v) }
 
+    // Instance methods - return new format
     /**
      * Convert vector to array
      * @returns {number[]} Array with vector components
@@ -242,11 +245,11 @@ class Vec {
     * Called automatically when you console.log a vector.
     * @returns {string} String representation of the vector
     */
-   toString() {
-       return `Vec(x: ${this.x}, y: ${this.y}, z: ${this.z})`;
-   }
+    toString() {
+        return `Vec(x: ${this.x}, y: ${this.y}, z: ${this.z})`;
+    }
 
-    // Static vector operations - return new vectors
+    // Static vector operations
     /**
      * Add two vectors
      * @param {Vec} v1 - First vector
@@ -327,13 +330,13 @@ class Vec {
     * @param {Vec} v2 - Second vector
     * @returns {Vec} Cross product
     */
-   static cross(v1, v2) {
-       return new Vec(
-           v1.y * v2.z - v1.z * v2.y,
-           v1.z * v2.x - v1.x * v2.z,
-           v1.x * v2.y - v1.y * v2.x
-       );
-   }
+    static cross(v1, v2) {
+        return new Vec(
+            v1.y * v2.z - v1.z * v2.y,
+            v1.z * v2.x - v1.x * v2.z,
+            v1.x * v2.y - v1.y * v2.x
+        );
+    }
 
     /**
      * Calculate squared magnitude of a vector
@@ -351,41 +354,6 @@ class Vec {
      */
     static mag(v) {
         return Math.sqrt(Vec.magSq(v))
-    }
-
-    /**
-     * Calculate the 2D distance between two vectors
-     * @param {Vec} v1 - First vector
-     * @param {Vec} v2 - Second vector
-     * @returns {number} 2D Distance
-     */
-    static dist2D(v1, v2) {
-        const dx = v1.x - v2.x;
-        const dy = v1.y - v2.y;
-        return Math.sqrt(dx * dx + dy * dy);
-    }
-
-    /**
-     * Calculate the 3D distance between two vectors
-     * @param {Vec} v1 - First vector
-     * @param {Vec} v2 - Second vector
-     * @returns {number} 3D Distance
-     */
-    static dist3D(v1, v2) {
-        const dx = v1.x - v2.x;
-        const dy = v1.y - v2.y;
-        const dz = v1.z - v2.z;
-        return Math.sqrt(dx * dx + dy * dy + dz * dz);
-    }
-
-    /**
-     * Calculate the distance between two vectors
-     * @param {Vec} v1 - First vector
-     * @param {Vec} v2 - Second vector
-     * @returns {number} Distance
-     */
-    static dist(v1, v2) {
-        return Vec.dist3D(v1,v2)
     }
 
     /**
@@ -436,6 +404,53 @@ class Vec {
     }
 
     /**
+     * Calculate the 2D distance between two vectors
+     * @param {Vec} v1 - First vector
+     * @param {Vec} v2 - Second vector
+     * @returns {number} 2D Distance
+     */
+    static dist2D(v1, v2) {
+        const dx = v1.x - v2.x;
+        const dy = v1.y - v2.y;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    /**
+     * Calculate the 3D distance between two vectors
+     * @param {Vec} v1 - First vector
+     * @param {Vec} v2 - Second vector
+     * @returns {number} 3D Distance
+     */
+    static dist3D(v1, v2) {
+        const dx = v1.x - v2.x;
+        const dy = v1.y - v2.y;
+        const dz = v1.z - v2.z;
+        return Math.sqrt(dx * dx + dy * dy + dz * dz);
+    }
+
+    /**
+     * Calculate the distance between two vectors
+     * @param {Vec} v1 - First vector
+     * @param {Vec} v2 - Second vector
+     * @returns {number} Distance
+     */
+    static dist(v1, v2) {
+        return Vec.dist3D(v1,v2)
+    }
+
+    /**
+     * Calculate the squared distance between two vectors
+     * @param {Vec} v1 - First vector
+     * @param {Vec} v2 - Second vector
+     * @returns {number} Squared Distance
+     */
+    static distSq(v1, v2) {
+        const dx = v1.x - v2.x;
+        const dy = v1.y - v2.y;
+        return dx * dx + dy * dy;
+    }
+
+    /**
      * Check if two vectors are equal
      * @param {Vec} v1 - First vector
      * @param {Vec} v2 - Second vector
@@ -443,21 +458,6 @@ class Vec {
      */
     static isEqual(v1, v2) {
         return v1.x === v2.x && v1.y === v2.y && v1.z === v2.z
-    }
-
-    /**
-     * Check if two vectors are equal within a given tolerance
-     * @param {Vec} v1 - First vector
-     * @param {Vec} v2 - Second vector
-     * @param {number} tolerance - Tolerance value
-     * @returns {boolean} True if vectors are equal within tolerance
-     */
-    static isEqualWithTolerance(v1, v2, tolerance) {
-        return (
-            Math.abs(v1.x - v2.x) <= tolerance &&
-            Math.abs(v1.y - v2.y) <= tolerance &&
-            Math.abs(v1.z - v2.z) <= tolerance
-        );
     }
 
     /**
@@ -593,6 +593,21 @@ class Vec {
      */
     static fromArray(arr) {
         return new Vec(arr[0] ?? 0, arr[1] ?? 0, arr[2] ?? 0);
+    }
+
+    /**
+     * Check if two vectors are equal within a given tolerance
+     * @param {Vec} v1 - First vector
+     * @param {Vec} v2 - Second vector
+     * @param {number} tolerance - Tolerance value
+     * @returns {boolean} True if vectors are equal within tolerance
+     */
+    static isEqualWithTolerance(v1, v2, tolerance) {
+        return (
+            Math.abs(v1.x - v2.x) <= tolerance &&
+            Math.abs(v1.y - v2.y) <= tolerance &&
+            Math.abs(v1.z - v2.z) <= tolerance
+        );
     }
 
     /**

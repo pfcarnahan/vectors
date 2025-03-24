@@ -1,11 +1,4 @@
-/**
- * @file vectorPJS.js
- * @version 1.1.0
- * @description A simple 2D and 3D vector library for JavaScript.
- * This library provides a `Vec` object for performing common vector operations.
- */
 var Vec = (function() {
-
     // Patch for creating new objects using the form ClassName.new()
     Object.constructor.prototype.new = function() {
         var obj = Object.create(this.prototype);
@@ -16,7 +9,7 @@ var Vec = (function() {
 
     /**
      * Creates a new 3D vector.
-     * @constructor
+     * @varructor
      * @param {number} [x=0] - The x component.
      * @param {number} [y=0] - The y component.
      * @param {number} [z=0] - The z component.
@@ -111,6 +104,7 @@ var Vec = (function() {
     Vec.prototype.rotate2D = function(theta) {
         return this.set(Vec.rotate2D(this, theta));
     };
+
     /**
      * Rotate a vector around an arbitrary axis by theta radians
      * @param {Vec} axis - Axis to rotate around
@@ -119,7 +113,7 @@ var Vec = (function() {
      */
     Vec.prototype.axisRot = function(axis, theta) {
         return this.set(Vec.axisRot(this, axis, theta));
-    }
+    };
 
     /**
      * Linearly interpolates this vector toward another vector.
@@ -228,7 +222,6 @@ var Vec = (function() {
         return Vec.dist3D(this, v);
     };
 
-
     /**
      * Calculates the distance between this vector and another vector.
      * @param {Vec} v - The other vector.
@@ -236,6 +229,15 @@ var Vec = (function() {
      */
     Vec.prototype.dist = function(v) {
         return Vec.dist(this, v);
+    };
+
+    /**
+     * Calculates the squared distance between this vector and another vector. (Less computationally expensive)
+     * @param {Vec} v - The other vector.
+     * @returns {number} The squared distance.
+    */
+    Vec.prototype.distSq = function(v) {
+        return Vec.distSq(this, v);
     };
 
     /**
@@ -295,17 +297,19 @@ var Vec = (function() {
         return Vec.cross(this, v);
     };
 
+    // Instance methods that convert to a different format
+
     /**
      * Converts this vector to an array.
      * @returns {number[]} An array containing the vector components [x, y, z].
      */
     Vec.prototype.toArray = function() {
         return [this.x, this.y, this.z];
-    }
+    };
 
     /**
     * Create a string representation of a vector.
-    * Called automatically when you console.log a vector.
+    * Called automatically when you println() or debug(), etc. a Vec.
     * @returns {string} String representation of the vector
     */
     Vec.prototype.toString = function() {
@@ -466,8 +470,8 @@ var Vec = (function() {
      * @returns {number} The 2D distance.
      */
     Vec.dist2D = function(v1, v2) {
-        const dx = v1.x - v2.x;
-        const dy = v1.y - v2.y;
+        var dx = v1.x - v2.x;
+        var dy = v1.y - v2.y;
         return Math.sqrt(dx * dx + dy * dy);
     };
 
@@ -478,10 +482,23 @@ var Vec = (function() {
      * @returns {number} The 3D distance.
      */
     Vec.dist3D = function(v1, v2) {
-        const dx = v1.x - v2.x;
-        const dy = v1.y - v2.y;
-        const dz = v1.z - v2.z;
+        var dx = v1.x - v2.x;
+        var dy = v1.y - v2.y;
+        var dz = v1.z - v2.z;
         return Math.sqrt(dx * dx + dy * dy + dz * dz);
+    };
+
+    /**
+     * Calculate the squared distance between two vectors.
+     * @param {Vec} v1 - The first vector.
+     * @param {Vec} v2 - The second vector.
+     * @returns {number} The squared distance.
+     */
+    Vec.distSq = function(v1, v2) {
+        var dx = v1.x - v2.x;
+        var dy = v1.y - v2.y;
+        var dz = v1.z - v2.z;
+        return dx * dx + dy * dy + dz * dz;
     };
 
     /**
@@ -516,16 +533,19 @@ var Vec = (function() {
      * @returns {Vec} New rotated vector
      */
     Vec.axisRot = function(v, axis, theta) {
-        const cos = Math.cos(theta);
-        const sin = Math.sin(theta);
-        const t = 1 - cos;
-        const { x, y, z } = Vec.norm(axis);
-        const before = v.clone();
+        var c = cos(theta);
+        var s = sin(theta);
+        var t = 1 - c;
+        var n = Vec.norm(axis);
+        var x = n.x;
+        var y = n.y;
+        var z = n.z;
+        var before = v.clone();
 
         return Vec.new(
-            Vec.new(cos + x*x*t, x*y*t - z*sin, x*z*t + y*sin).dot(before),
-            Vec.new(x*y*t + z*sin, cos + y*y*t, y*z*t - x*sin).dot(before),
-            Vec.new(z*x*t - y*sin, z*y*t + x*sin, cos + z*z*t).dot(before)
+            Vec.new(c + x*x*t, x*y*t - z*s, x*z*t + y*s).dot(before),
+            Vec.new(x*y*t + z*s, c + y*y*t, y*z*t - x*s).dot(before),
+            Vec.new(z*x*t - y*s, z*y*t + x*s, c + z*z*t).dot(before)
         );
     };
 
@@ -545,7 +565,7 @@ var Vec = (function() {
      * @returns {number} The heading in radians.
      */
     Vec.heading = function(v) {
-        return Math.atan2(v.y, v.x);
+        return atan2(v.y, v.x);
     };
 
     /**
@@ -555,7 +575,7 @@ var Vec = (function() {
      * @returns {number} The angle in radians.
      */
     Vec.angleBetween = function(v1, v2) {
-        return Math.acos(Vec.dot(v1, v2) / (Vec.mag(v1) * Vec.mag(v2)));
+        return acos(Vec.dot(v1, v2) / (Vec.mag(v1) * Vec.mag(v2)));
     };
 
     /**
@@ -620,8 +640,8 @@ var Vec = (function() {
      * @returns {Vec} The new vector.
      */
     Vec.fromAngle = function(angle, magnitude) {
-        const x = magnitude * Math.cos(angle);
-        const y = magnitude * Math.sin(angle);
+        var x = magnitude * cos(angle);
+        var y = magnitude * sin(angle);
         return Vec.new(x, y, 0);
     };
 
@@ -633,9 +653,9 @@ var Vec = (function() {
      * @returns {Vec} The new vector.
      */
     Vec.fromAngles = function(theta, phi, length) {
-        const x = length * Math.sin(phi) * Math.cos(theta);
-        const y = length * Math.sin(phi) * Math.sin(theta);
-        const z = length * Math.cos(phi);
+        var x = length * sin(phi) * cos(theta);
+        var y = length * sin(phi) * sin(theta);
+        var z = length * cos(phi);
         return Vec.new(x, y, z);
     };
 
@@ -668,6 +688,25 @@ var Vec = (function() {
         return (Math.abs(v1.x - v2.x) <= tolerance &&
             Math.abs(v1.y - v2.y) <= tolerance &&
             Math.abs(v1.z - v2.z) <= tolerance);
+    };
+
+    Vec.fromAngle = function(angle, magnitude) {
+        var x = magnitude * cos(angle);
+        var y = magnitude * sin(angle);
+        return new Vec(x, y, 0);
+    };
+    /**
+     * Create a 3D vector from two angles (theta, phi) and a length (spherical coordinates)
+     * @param {number} theta - Angle in radians in the XY plane
+     * @param {number} phi - Angle in radians from the positive Z axis
+     * @param {number} length - Length of the vector
+     * @returns {Vec} New vector
+     */
+    Vec.fromAngles = function(theta, phi, length) {
+        var x = length * sin(phi) * cos(theta);
+        var y = length * sin(phi) * sin(theta);
+        var z = length * cos(phi);
+        return new Vec(x, y, z);
     };
 
     Vec.dist = Vec.dist3D;
