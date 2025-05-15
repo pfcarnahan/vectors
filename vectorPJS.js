@@ -9,7 +9,7 @@ var Vec = (function() {
 
     /**
      * Creates a new 3D vector.
-     * @varructor
+     * @constructor
      * @param {number} [x=0] - The x component.
      * @param {number} [y=0] - The y component.
      * @param {number} [z=0] - The z component.
@@ -330,7 +330,7 @@ var Vec = (function() {
         if (v2 instanceof Vec) {
             return Vec.new(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z);
         }
-        return Vec.new(v1.x + (y || 0), v1.y + (z || 0), v1.z + (arguments[3] || 0));
+        return Vec.new(v1.x + (v2 || 0), v1.y + (y || 0), v1.z + (z || 0));
     };
 
     /**
@@ -345,7 +345,7 @@ var Vec = (function() {
         if (v2 instanceof Vec) {
             return Vec.new(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z);
         }
-        return Vec.new(v1.x - (y || 0), v1.y - (z || 0), v1.z - (arguments[3] || 0));
+        return Vec.new(v1.x - (v2 || 0), v1.y - (y || 0), v1.z - (z || 0));
     };
 
     /**
@@ -689,12 +689,19 @@ var Vec = (function() {
             Math.abs(v1.y - v2.y) <= tolerance &&
             Math.abs(v1.z - v2.z) <= tolerance);
     };
-
+    
+    /**
+     * Create a 2D vector from angle and magnitude (polar coordinates)
+     * @param {number} angle - Angle in radians
+     * @param {number} magnitude - Magnitude of the vector
+     * @returns {Vec} New vector
+     */
     Vec.fromAngle = function(angle, magnitude) {
         var x = magnitude * cos(angle);
         var y = magnitude * sin(angle);
-        return new Vec(x, y, 0);
+        return Vec.new(x, y, 0);
     };
+
     /**
      * Create a 3D vector from two angles (theta, phi) and a length (spherical coordinates)
      * @param {number} theta - Angle in radians in the XY plane
@@ -706,10 +713,18 @@ var Vec = (function() {
         var x = length * sin(phi) * cos(theta);
         var y = length * sin(phi) * sin(theta);
         var z = length * cos(phi);
-        return new Vec(x, y, z);
+        return Vec.new(x, y, z);
     };
 
-    Vec.dist = Vec.dist3D;
+    /**
+     * Calculate the distance between two vectors
+     * @param {Vec} v1 - First vector
+     * @param {Vec} v2 - Second vector
+     * @returns {number} Distance
+     */
+    Vec.dist = function(v1, v2) {
+        return Vec.dist3D(v1, v2);
+    };
 
     return Vec;
 })();
